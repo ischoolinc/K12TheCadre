@@ -13,6 +13,8 @@ namespace K12.Behavior.TheCadre
         static public void Main()
         {
 
+            ServerModule.AutoManaged("https://module.ischool.com.tw/module/138/Cadre_Behavior/udm.xml");
+
             #region 註解
             //bool Check_ischool_isSeniorOrJunior = false;
             //K12.Data.Configuration.ConfigData cd = K12.Data.School.Configuration["ischool_Metadata"];
