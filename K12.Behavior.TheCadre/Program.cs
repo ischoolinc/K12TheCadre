@@ -33,7 +33,10 @@ namespace K12.Behavior.TheCadre
             #endregion
 
             //幹部資料項目
-            K12.Presentation.NLDPanels.Student.AddDetailBulider(new FISCA.Presentation.DetailBulider<StudentCadreItem>());
+            FISCA.Permission.FeatureAce UserPermission;
+            UserPermission = FISCA.Permission.UserAcl.Current[Permissions.幹部記錄];
+            if (UserPermission.Editable || UserPermission.Viewable)
+                K12.Presentation.NLDPanels.Student.AddDetailBulider(new FISCA.Presentation.DetailBulider<StudentCadreItem>());
 
             string URL班級幹部總表 = "ischool/高中系統/共用/學務/班級/報表/班級幹部總表";
             string URL學校幹部總表 = "ischool/高中系統/共用/學務/班級/報表/學校幹部總表";
