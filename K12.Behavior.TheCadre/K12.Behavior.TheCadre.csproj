@@ -279,12 +279,6 @@
     <Compile Include="StudentExtendControls\StudentCadreItem.Designer.cs">
       <DependentUpon>StudentCadreItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config\OldCadreSetup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Config\OldCadreSetup.designer.cs">
-      <DependentUpon>OldCadreSetup.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.resx">
@@ -332,9 +326,6 @@
     <EmbeddedResource Include="StudentExtendControls\StudentCadreItem.resx">
       <DependentUpon>StudentCadreItem.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Config\OldCadreSetup.resx">
-      <DependentUpon>OldCadreSetup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

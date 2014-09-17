@@ -42,7 +42,7 @@ namespace K12.Behavior.TheCadre
             string URL學校幹部總表 = "ischool/高中系統/共用/學務/班級/報表/學校幹部總表";
             //URL
             string URL學生幹部證明單 = "ischool/高中系統/共用/學務/學生/報表/幹部證明單";
-            string URL班級幹部管理 = "ischool/高中系統/共用/學務/班級/管理班級幹部";
+            //string URL班級幹部管理 = "ischool/高中系統/共用/學務/班級/管理班級幹部";
             string URL班級幹部登錄 = "ischool/高中系統/共用/學務/班級/班級幹部登錄";
             string URL匯出擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯出/擔任幹部紀錄";
             string URL匯入擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯入/擔任幹部紀錄";
@@ -112,31 +112,31 @@ namespace K12.Behavior.TheCadre
             #endregion
 
             #region URL班級幹部管理
-            FISCA.Features.Register(URL班級幹部管理, arg =>
-            {
-                if (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1)
-                {
-                    TheCadreByClassForm CBC = new TheCadreByClassForm(K12.Presentation.NLDPanels.Class.SelectedSource[0]);
-                    CBC.ShowDialog();
-                }
-                else if (K12.Presentation.NLDPanels.Class.SelectedSource.Count > 1)
-                {
-                    MsgBox.Show("本功能僅提供對單一班級進行幹部登錄作業!");
-                }
-                else
-                {
-                    MsgBox.Show("請選擇一個班級!!");
-                }
-            });
+            //FISCA.Features.Register(URL班級幹部管理, arg =>
+            //{
+            //    if (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1)
+            //    {
+            //        TheCadreByClassForm CBC = new TheCadreByClassForm(K12.Presentation.NLDPanels.Class.SelectedSource[0]);
+            //        CBC.ShowDialog();
+            //    }
+            //    else if (K12.Presentation.NLDPanels.Class.SelectedSource.Count > 1)
+            //    {
+            //        MsgBox.Show("本功能僅提供對單一班級進行幹部登錄作業!");
+            //    }
+            //    else
+            //    {
+            //        MsgBox.Show("請選擇一個班級!!");
+            //    }
+            //});
 
             RibbonBarItem rbItem3 = K12.Presentation.NLDPanels.Class.RibbonBarItems["學務"];
-            rbItem3["班級幹部管理"].Enable = false;
-            rbItem3["班級幹部管理"].Image = Properties.Resources.niche_fav_64;
-            rbItem3["班級幹部管理"].Size = RibbonBarButton.MenuButtonSize.Medium;
-            rbItem3["班級幹部管理"].Click += delegate
-            {
-                Features.Invoke(URL班級幹部管理);
-            };
+            //rbItem3["班級幹部管理"].Enable = false;
+            //rbItem3["班級幹部管理"].Image = Properties.Resources.niche_fav_64;
+            //rbItem3["班級幹部管理"].Size = RibbonBarButton.MenuButtonSize.Medium;
+            //rbItem3["班級幹部管理"].Click += delegate
+            //{
+            //    Features.Invoke(URL班級幹部管理);
+            //};
             #endregion
 
             #region URL班級幹部登錄
@@ -235,77 +235,10 @@ namespace K12.Behavior.TheCadre
             K12.Presentation.NLDPanels.Class.SelectedSourceChanged += delegate
             {
                 rbItem3["班級幹部登錄"].Enable = (Permissions.班級幹部登錄權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
-                rbItem3["班級幹部管理"].Enable = (Permissions.班級幹部管理權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
+                //rbItem3["班級幹部管理"].Enable = (Permissions.班級幹部管理權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
 
                 rbItem7["報表"]["學務相關報表"]["班級幹部總表"].Enable = (Permissions.班級幹部總表權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count >= 1));
             };
-
-            #region 國中版本(註解)
-            //}
-            //else
-            //{
-
-            //RibbonBarItem rbItem2 = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"];
-            //rbItem2["報表"]["學務相關報表"]["學生幹部證明單"].Enable = Permissions.學生幹部證明單權限;
-            //rbItem2["報表"]["學務相關報表"]["學生幹部證明單"].Click += delegate
-            //{
-            //    if (K12.Presentation.NLDPanels.Student.SelectedSource.Count != 0)
-            //    {
-            //        CadreProveReport StudentRW = new CadreProveReport();
-            //        StudentRW.ShowDialog();
-            //    }
-            //    else
-            //    {
-            //        FISCA.Presentation.Controls.MsgBox.Show("請選擇學生!");
-            //    }
-            //};
-
-            //RibbonBarItem rbItem3 = K12.Presentation.NLDPanels.Class.RibbonBarItems["學務"];
-            //rbItem3["班級幹部管理"].Enable = Permissions.班級幹部管理權限;
-            //rbItem3["班級幹部管理"].Image = Properties.Resources.niche_fav_64;
-            //rbItem3["班級幹部管理"].Click += delegate
-            //{
-            //    if (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1)
-            //    {
-            //        TheCadreByClassForm CBC = new TheCadreByClassForm(K12.Presentation.NLDPanels.Class.SelectedSource[0]);
-            //        CBC.ShowDialog();
-            //    }
-            //    else if (K12.Presentation.NLDPanels.Class.SelectedSource.Count > 1)
-            //    {
-            //        MsgBox.Show("本功能僅提供對單一班級進行幹部登錄作業!");
-            //    }
-            //    else
-            //    {
-            //        MsgBox.Show("請選擇一個班級!!");
-            //    }
-            //};
-
-            //K12.Presentation.NLDPanels.Class.SelectedSourceChanged += delegate
-            //{
-            //    rbItem3["班級幹部管理"].Enable = (Permissions.班級幹部管理權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
-            //};
-
-            //RibbonBarButton rbItemExport = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"]["匯出"];
-            //rbItemExport["匯出擔任幹部記錄"].Enable = Permissions.匯出擔任幹部記錄權限;
-            //rbItemExport["匯出擔任幹部記錄"].Click += delegate
-            //{
-            //    SmartSchool.API.PlugIn.Export.Exporter exporter = new ExportSchoolObject();
-            //    ExportStudentV2 wizard = new ExportStudentV2(exporter.Text, exporter.Image);
-            //    exporter.InitializeExport(wizard);
-            //    wizard.ShowDialog();
-            //};
-
-            //RibbonBarButton rbItemImport = K12.Presentation.NLDPanels.Student.RibbonBarItems["資料統計"]["匯入"];
-            //rbItemImport["匯入擔任幹部記錄"].Enable = Permissions.匯入擔任幹部記錄權限;
-            //rbItemImport["匯入擔任幹部記錄"].Click += delegate
-            //{
-            //    SmartSchool.API.PlugIn.Import.Importer importer = new ImportSchoolObject();
-            //    ImportStudentV2 wizard = new ImportStudentV2(importer.Text, importer.Image);
-            //    importer.InitializeImport(wizard);
-            //    wizard.ShowDialog();
-            //};
-            //}
-            #endregion
 
             #region 權限控管
 
@@ -324,7 +257,7 @@ namespace K12.Behavior.TheCadre
             detail2.Add(new RibbonFeature(Permissions.匯入擔任幹部記錄, "匯入擔任幹部記錄"));
 
             detail2 = RoleAclSource.Instance["班級"]["功能按鈕"];
-            detail2.Add(new ReportFeature(Permissions.班級幹部管理, "班級幹部管理"));
+            //detail2.Add(new ReportFeature(Permissions.班級幹部管理, "班級幹部管理"));
             detail2.Add(new ReportFeature(Permissions.班級幹部登錄, "班級幹部登錄"));
 
             detail2 = RoleAclSource.Instance["班級"]["報表"];

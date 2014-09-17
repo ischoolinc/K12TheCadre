@@ -31,21 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.btnSave = new DevComponents.DotNetBar.ButtonX();
-            this.btnExit = new DevComponents.DotNetBar.ButtonX();
-            this.labelX1 = new DevComponents.DotNetBar.LabelX();
-            this.btnPrintOut = new DevComponents.DotNetBar.ButtonX();
-            this.btnPrintIn = new DevComponents.DotNetBar.ButtonX();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.KeyInMerit = new DevComponents.DotNetBar.Controls.CheckBoxX();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCadreType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.colCadreIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCadreName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,6 +39,20 @@
             this.colMeritB = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMeritC = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMeritReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnSave = new DevComponents.DotNetBar.ButtonX();
+            this.btnExit = new DevComponents.DotNetBar.ButtonX();
+            this.labelX1 = new DevComponents.DotNetBar.LabelX();
+            this.btnPrintOut = new DevComponents.DotNetBar.ButtonX();
+            this.btnPrintIn = new DevComponents.DotNetBar.ButtonX();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.KeyInMerit = new DevComponents.DotNetBar.Controls.CheckBoxX();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,9 +60,9 @@
             // 
             this.dataGridViewX1.AllowUserToResizeColumns = false;
             this.dataGridViewX1.AllowUserToResizeRows = false;
-            this.dataGridViewX1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewX1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewX1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewX1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -91,6 +90,55 @@
             this.dataGridViewX1.TabIndex = 0;
             this.dataGridViewX1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellEndEdit);
             this.dataGridViewX1.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridViewX1_UserAddedRow);
+            // 
+            // colCadreType
+            // 
+            this.colCadreType.HeaderText = "幹部類型";
+            this.colCadreType.Items.AddRange(new object[] {
+            "班級幹部",
+            "社團幹部",
+            "學校幹部"});
+            this.colCadreType.Name = "colCadreType";
+            // 
+            // colCadreIndex
+            // 
+            this.colCadreIndex.HeaderText = "排序";
+            this.colCadreIndex.Name = "colCadreIndex";
+            this.colCadreIndex.Width = 65;
+            // 
+            // colCadreName
+            // 
+            this.colCadreName.HeaderText = "幹部名稱";
+            this.colCadreName.Name = "colCadreName";
+            // 
+            // colNumber
+            // 
+            this.colNumber.HeaderText = "擔任人數";
+            this.colNumber.Name = "colNumber";
+            // 
+            // colMeritA
+            // 
+            this.colMeritA.HeaderText = "大功";
+            this.colMeritA.Name = "colMeritA";
+            this.colMeritA.Width = 60;
+            // 
+            // colMeritB
+            // 
+            this.colMeritB.HeaderText = "小功";
+            this.colMeritB.Name = "colMeritB";
+            this.colMeritB.Width = 60;
+            // 
+            // colMeritC
+            // 
+            this.colMeritC.HeaderText = "嘉獎";
+            this.colMeritC.Name = "colMeritC";
+            this.colMeritC.Width = 60;
+            // 
+            // colMeritReason
+            // 
+            this.colMeritReason.HeaderText = "獎勵事由";
+            this.colMeritReason.Name = "colMeritReason";
+            this.colMeritReason.Width = 300;
             // 
             // btnSave
             // 
@@ -188,18 +236,6 @@
             this.KeyInMerit.Text = "輸入敘獎資料";
             this.KeyInMerit.CheckedChanged += new System.EventHandler(this.KeyInMerit_CheckedChanged);
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(174, 345);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(107, 17);
-            this.linkLabel1.TabIndex = 7;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "幹部名稱清單(舊)";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.HeaderText = "幹部名稱";
@@ -236,61 +272,11 @@
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             this.dataGridViewTextBoxColumn6.Width = 300;
             // 
-            // colCadreType
-            // 
-            this.colCadreType.HeaderText = "幹部類型";
-            this.colCadreType.Items.AddRange(new object[] {
-            "班級幹部",
-            "社團幹部",
-            "學校幹部"});
-            this.colCadreType.Name = "colCadreType";
-            // 
-            // colCadreIndex
-            // 
-            this.colCadreIndex.HeaderText = "排序";
-            this.colCadreIndex.Name = "colCadreIndex";
-            this.colCadreIndex.Width = 65;
-            // 
-            // colCadreName
-            // 
-            this.colCadreName.HeaderText = "幹部名稱";
-            this.colCadreName.Name = "colCadreName";
-            // 
-            // colNumber
-            // 
-            this.colNumber.HeaderText = "擔任人數";
-            this.colNumber.Name = "colNumber";
-            // 
-            // colMeritA
-            // 
-            this.colMeritA.HeaderText = "大功";
-            this.colMeritA.Name = "colMeritA";
-            this.colMeritA.Width = 60;
-            // 
-            // colMeritB
-            // 
-            this.colMeritB.HeaderText = "小功";
-            this.colMeritB.Name = "colMeritB";
-            this.colMeritB.Width = 60;
-            // 
-            // colMeritC
-            // 
-            this.colMeritC.HeaderText = "嘉獎";
-            this.colMeritC.Name = "colMeritC";
-            this.colMeritC.Width = 60;
-            // 
-            // colMeritReason
-            // 
-            this.colMeritReason.HeaderText = "獎勵事由";
-            this.colMeritReason.Name = "colMeritReason";
-            this.colMeritReason.Width = 300;
-            // 
             // NewCadreSetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(642, 372);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.KeyInMerit);
             this.Controls.Add(this.btnPrintIn);
             this.Controls.Add(this.btnPrintOut);
@@ -298,6 +284,7 @@
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.dataGridViewX1);
+            this.DoubleBuffered = true;
             this.Name = "NewCadreSetup";
             this.Text = "幹部名稱管理(班級幹部 / 學校幹部 / 社團幹部)";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
@@ -323,7 +310,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Timer timer1;
         private DevComponents.DotNetBar.Controls.CheckBoxX KeyInMerit;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.DataGridViewComboBoxColumn colCadreType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCadreIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCadreName;
