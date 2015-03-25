@@ -15,23 +15,6 @@ namespace K12.Behavior.TheCadre
 
             ServerModule.AutoManaged("https://module.ischool.com.tw/module/138/Cadre_Behavior/udm.xml");
 
-            #region 註解
-            //bool Check_ischool_isSeniorOrJunior = false;
-            //K12.Data.Configuration.ConfigData cd = K12.Data.School.Configuration["ischool_Metadata"];
-            //if (cd["EducationalSystem"] == "SeniorHighSchool") //如果是高中
-            //{
-            //    Check_ischool_isSeniorOrJunior = true;
-            //}
-            //else if (cd["EducationalSystem"] == "JuniorHighSchool") //如果是國中
-            //{
-            //    Check_ischool_isSeniorOrJunior = false;
-            //}
-            //else //預設為高中模式
-            //{
-            //    Check_ischool_isSeniorOrJunior = true;
-            //} 
-            #endregion
-
             //幹部資料項目
             FISCA.Permission.FeatureAce UserPermission;
             UserPermission = FISCA.Permission.UserAcl.Current[Permissions.幹部記錄];
@@ -42,7 +25,6 @@ namespace K12.Behavior.TheCadre
             string URL學校幹部總表 = "ischool/高中系統/共用/學務/班級/報表/學校幹部總表";
             //URL
             string URL學生幹部證明單 = "ischool/高中系統/共用/學務/學生/報表/幹部證明單";
-            //string URL班級幹部管理 = "ischool/高中系統/共用/學務/班級/管理班級幹部";
             string URL班級幹部登錄 = "ischool/高中系統/共用/學務/班級/班級幹部登錄";
             string URL匯出擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯出/擔任幹部紀錄";
             string URL匯入擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯入/擔任幹部紀錄";
@@ -111,33 +93,7 @@ namespace K12.Behavior.TheCadre
             };
             #endregion
 
-            #region URL班級幹部管理
-            //FISCA.Features.Register(URL班級幹部管理, arg =>
-            //{
-            //    if (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1)
-            //    {
-            //        TheCadreByClassForm CBC = new TheCadreByClassForm(K12.Presentation.NLDPanels.Class.SelectedSource[0]);
-            //        CBC.ShowDialog();
-            //    }
-            //    else if (K12.Presentation.NLDPanels.Class.SelectedSource.Count > 1)
-            //    {
-            //        MsgBox.Show("本功能僅提供對單一班級進行幹部登錄作業!");
-            //    }
-            //    else
-            //    {
-            //        MsgBox.Show("請選擇一個班級!!");
-            //    }
-            //});
-
             RibbonBarItem rbItem3 = K12.Presentation.NLDPanels.Class.RibbonBarItems["學務"];
-            //rbItem3["班級幹部管理"].Enable = false;
-            //rbItem3["班級幹部管理"].Image = Properties.Resources.niche_fav_64;
-            //rbItem3["班級幹部管理"].Size = RibbonBarButton.MenuButtonSize.Medium;
-            //rbItem3["班級幹部管理"].Click += delegate
-            //{
-            //    Features.Invoke(URL班級幹部管理);
-            //};
-            #endregion
 
             #region URL班級幹部登錄
             FISCA.Features.Register(URL班級幹部登錄, arg =>
@@ -208,7 +164,7 @@ namespace K12.Behavior.TheCadre
              });
 
             RibbonBarItem RibbonItem = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "基本設定"];
-            RibbonItem["管理"]["幹部名稱管理"].Enable = Permissions.班級幹部管理權限;
+            RibbonItem["管理"]["幹部名稱管理"].Enable = Permissions.幹部名稱管理權限;
             RibbonItem["管理"]["幹部名稱管理"].Click += delegate
             {
                 Features.Invoke(URL幹部名稱管理);
@@ -235,8 +191,6 @@ namespace K12.Behavior.TheCadre
             K12.Presentation.NLDPanels.Class.SelectedSourceChanged += delegate
             {
                 rbItem3["班級幹部登錄"].Enable = (Permissions.班級幹部登錄權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
-                //rbItem3["班級幹部管理"].Enable = (Permissions.班級幹部管理權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count == 1));
-
                 rbItem7["報表"]["學務相關報表"]["班級幹部總表"].Enable = (Permissions.班級幹部總表權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count >= 1));
             };
 

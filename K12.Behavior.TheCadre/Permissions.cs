@@ -22,9 +22,6 @@ namespace K12.Behavior.TheCadre
 
         public static string 學校幹部總表 { get { return "K12.class.TheCadre.Report00060.8"; } }
 
-        public static string 班級幹部管理 { get { return "K12.class.TheCadre.Report00070"; } }
-        //public static string 班級幹部管理_國中 { get { return "Behavior.TheCadre.Report00070"; } }
-
         public static string 班級幹部登錄 { get { return "K12.class.TheCadre.Report00070.1"; } }
         //public static string 班級幹部登錄_國中 { get { return "Behavior.TheCadre.Report00070.1"; } }
 
@@ -94,16 +91,6 @@ namespace K12.Behavior.TheCadre
             {
                 bool check1 = FISCA.Permission.UserAcl.Current[學生幹部證明單].Executable;
                 //bool check2 = FISCA.Permission.UserAcl.Current[學生幹部證明單_國中].Executable;
-                return check1;// || check2;
-            }
-        }
-
-        public static bool 班級幹部管理權限
-        {
-            get
-            {
-                bool check1 = FISCA.Permission.UserAcl.Current[班級幹部管理].Executable;
-                //bool check2 = FISCA.Permission.UserAcl.Current[班級幹部管理_國中].Executable;
                 return check1;// || check2;
             }
         }
