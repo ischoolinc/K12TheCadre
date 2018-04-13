@@ -90,7 +90,9 @@ namespace K12.Behavior.TheCadre
             //取得範本
             Workbook template = new Workbook();
             template.Worksheets.Clear();
-            template.Open(new MemoryStream(Properties.Resources.學校幹部總表_範本), FileFormatType.Excel2003);
+            //template.Open(new MemoryStream(Properties.Resources.學校幹部總表_範本), FileFormatType.Xlsx);
+            
+            template = new Workbook(new MemoryStream(Properties.Resources.學校幹部總表_範本), new LoadOptions());
 
             Worksheet ptws = template.Worksheets[0];
             //建立Range
@@ -106,7 +108,7 @@ namespace K12.Behavior.TheCadre
             //依據 學年度/學期/座號/姓名/學號/類型/幹部名稱/說明 進行列印
 
             int cutStudentIndex = 0;
-            int count = 0;
+            //int count = 0;
 
             ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
 
@@ -122,7 +124,8 @@ namespace K12.Behavior.TheCadre
                 if (cutStudentIndex == cutPageIndex)
                 {
                     cutStudentIndex = 1;
-                    ws.HPageBreaks.Add(studentCount, 8);
+                    //ws.HPageBreaks.Add(studentCount, 8);
+                    ws.HorizontalPageBreaks.Add(studentCount, 8);
                     ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
                     studentCount += 2;
                 }
@@ -182,7 +185,8 @@ namespace K12.Behavior.TheCadre
 
                 try
                 {
-                    wb.Save(path, FileFormatType.Excel2003);
+                    //wb.Save(path, FileFormatType.Excel2003);
+                    wb.Save(path,SaveFormat.Xlsx);
                     FISCA.Presentation.MotherForm.SetStatusBarMessage(reportName + "產生完成");
                     System.Diagnostics.Process.Start(path);
                 }
@@ -190,13 +194,14 @@ namespace K12.Behavior.TheCadre
                 {
                     SaveFileDialog sd = new SaveFileDialog();
                     sd.Title = "另存新檔";
-                    sd.FileName = reportName + ".xls";
-                    sd.Filter = "Excel檔案 (*.xls)|*.xls|所有檔案 (*.*)|*.*";
+                    sd.FileName = reportName + ".xlsx";
+                    sd.Filter = "Excel檔案 (*.xlsx)|*.xlsx|所有檔案 (*.*)|*.*";
                     if (sd.ShowDialog() == DialogResult.OK)
                     {
                         try
                         {
-                            wb.Save(sd.FileName, FileFormatType.Excel2003);
+                            //wb.Save(sd.FileName, FileFormatType.Excel2003);
+                            wb.Save(sd.FileName, SaveFormat.Xlsx);
                         }
                         catch
                         {

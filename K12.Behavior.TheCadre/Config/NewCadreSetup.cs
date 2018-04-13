@@ -257,12 +257,13 @@ namespace K12.Behavior.TheCadre
             #region OpenFileDialog
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "選擇要匯入的缺曠類別設定值";
-            ofd.Filter = "Excel檔案 (*.xls)|*.xls";
+            ofd.Filter = "Excel檔案 (*.xlsx)|*.xlsx";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    wb.Open(ofd.FileName);
+                    //wb.Open(ofd.FileName);
+                    wb = new Workbook(ofd.FileName);
                 }
                 catch
                 {

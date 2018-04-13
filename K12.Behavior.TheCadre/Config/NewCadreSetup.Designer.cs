@@ -211,7 +211,7 @@
             // saveFileDialog1
             // 
             this.saveFileDialog1.FileName = "匯出幹部名稱管理";
-            this.saveFileDialog1.Filter = "Excel (*.xls)|*.xls";
+            this.saveFileDialog1.Filter = "Excel (*.xlsx)|*.xlsx";
             // 
             // timer1
             // 

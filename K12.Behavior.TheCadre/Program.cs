@@ -30,7 +30,7 @@ namespace K12.Behavior.TheCadre
             string URL匯入擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯入/擔任幹部紀錄";
             string URL幹部名稱管理 = "ischool/高中系統/共用/學務/學務作業/幹部名稱管理";
             string URL學校幹部登錄 = "ischool/高中系統/共用/學務/學務作業/學校幹部登錄";
-
+            string URL幹部批次修改 = "ischool/高中系統/共用/學務/學務作業/幹部批次修改";
             //註冊功能
             #region URL班級幹部總表
             FISCA.Features.Register(URL班級幹部總表, arg =>
@@ -194,6 +194,21 @@ namespace K12.Behavior.TheCadre
                 rbItem7["報表"]["學務相關報表"]["班級幹部總表"].Enable = (Permissions.班級幹部總表權限 && (K12.Presentation.NLDPanels.Class.SelectedSource.Count >= 1));
             };
 
+            #region 幹部批次修改
+            // 2018/04/13 羿均 優化項目
+            FISCA.Features.Register(URL幹部批次修改, arg =>
+            {
+                (new CadreEdit.CadreEditForm()).ShowDialog();
+            });
+            RibbonSpeedInsert["幹部批次修改"].Enable = Permissions.幹部批次修改權限;
+            RibbonSpeedInsert["幹部批次修改"].Image = Properties.Resources.niche_fav_64;
+            RibbonSpeedInsert["幹部批次修改"].Click += delegate
+            {
+                Features.Invoke(URL幹部批次修改);
+            };
+            #endregion
+
+
             #region 權限控管
 
             Catalog detail2;
@@ -221,6 +236,7 @@ namespace K12.Behavior.TheCadre
             detail2.Add(new ReportFeature(Permissions.幹部名稱管理, "幹部名稱管理"));
             detail2.Add(new ReportFeature(Permissions.學校幹部登錄, "學校幹部登錄"));
             detail2.Add(new ReportFeature(Permissions.學校幹部總表, "學校幹部總表"));
+            detail2.Add(new ReportFeature(Permissions.幹部批次修改, "幹部批次修改"));
             #endregion
 
         }

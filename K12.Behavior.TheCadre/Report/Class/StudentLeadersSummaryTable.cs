@@ -87,7 +87,8 @@ namespace K12.Behavior.TheCadre
             //取得範本
             Workbook template = new Workbook();
             template.Worksheets.Clear();
-            template.Open(new MemoryStream(Properties.Resources.班級幹部總表_範本), FileFormatType.Excel2003);
+            //template.Open(new MemoryStream(Properties.Resources.班級幹部總表_範本), FileFormatType.Xlsx);
+            template = new Workbook(new MemoryStream(Properties.Resources.班級幹部總表_範本), new LoadOptions());
 
             Worksheet ptws = template.Worksheets[0];
             //建立Range
@@ -135,7 +136,8 @@ namespace K12.Behavior.TheCadre
                         if (cutStudentIndex == cutPageIndex)
                         {
                             cutStudentIndex = 1;
-                            ws.HPageBreaks.Add(studentCount, 7);
+                            //ws.HPageBreaks.Add(studentCount, 7);
+                            ws.HorizontalPageBreaks.Add(studentCount, 7);
                             ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
                             studentCount += 2;
                         }
@@ -161,7 +163,8 @@ namespace K12.Behavior.TheCadre
                     }
                 }
                 //ws.Cells.CreateRange(studentCount - 1, 0, 1, 8).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
-                ws.HPageBreaks.Add(studentCount, 7);
+                //ws.HPageBreaks.Add(studentCount, 7);
+                ws.HorizontalPageBreaks.Add(studentCount, 7);
             }
 
             string path = Path.Combine(Application.StartupPath, "Reports");
@@ -201,7 +204,8 @@ namespace K12.Behavior.TheCadre
 
                 try
                 {
-                    wb.Save(path, FileFormatType.Excel2003);
+                    //wb.Save(path, FileFormatType.Excel2003);
+                    wb.Save(path,SaveFormat.Xlsx);
                     FISCA.Presentation.MotherForm.SetStatusBarMessage(reportName + "產生完成");
                     System.Diagnostics.Process.Start(path);
                 }
@@ -209,13 +213,14 @@ namespace K12.Behavior.TheCadre
                 {
                     SaveFileDialog sd = new SaveFileDialog();
                     sd.Title = "另存新檔";
-                    sd.FileName = reportName + ".xls";
-                    sd.Filter = "Excel檔案 (*.xls)|*.xls|所有檔案 (*.*)|*.*";
+                    sd.FileName = reportName + ".xlsx";
+                    sd.Filter = "Excel檔案 (*.xlsx)|*.xlsx|所有檔案 (*.*)|*.*";
                     if (sd.ShowDialog() == DialogResult.OK)
                     {
                         try
                         {
-                            wb.Save(sd.FileName, FileFormatType.Excel2003);
+                            //wb.Save(sd.FileName, FileFormatType.Excel2003);
+                            wb.Save(sd.FileName,SaveFormat.Xlsx);
                         }
                         catch
                         {
