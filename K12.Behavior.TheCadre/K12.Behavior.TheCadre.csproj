@@ -201,6 +201,12 @@
     <Compile Include="CadreEdit\SchoolYearSemesterEditForm.Designer.cs">
       <DependentUpon>SchoolYearSemesterEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CadreMeritManage\CadreMeritManage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CadreMeritManage\CadreMeritManage.Designer.cs">
+      <DependentUpon>CadreMeritManage.cs</DependentUpon>
+    </Compile>
     <Compile Include="ClassExtendControls\new\CadreDataRow.cs" />
     <Compile Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.cs">
       <SubType>Form</SubType>
@@ -308,6 +314,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CadreEdit\CadreEditForm.resx">
+      <DependentUpon>CadreEditForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.resx">
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </EmbeddedResource>

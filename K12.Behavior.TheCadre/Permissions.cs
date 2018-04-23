@@ -39,6 +39,8 @@ namespace K12.Behavior.TheCadre
 
         public static string 幹部批次修改 { get { return "8E64AE0D-1D86-465D-BE4D-16B7C3AFAB68"; } }
 
+        public static string 幹部敘獎作業 { get { return "BF048580-982C-41A6-8CD5-B79B5B78DC2D"; } }
+
         public static bool 學校幹部總表權限
         {
             get
@@ -132,6 +134,15 @@ namespace K12.Behavior.TheCadre
             get
             {
                 bool check1 = FISCA.Permission.UserAcl.Current[幹部批次修改].Executable;
+                return check1;
+            }
+        }
+
+        public static bool 幹部敘獎作業權限
+        {
+            get
+            {
+                bool check1 = FISCA.Permission.UserAcl.Current[幹部敘獎作業].Executable;
                 return check1;
             }
         }
