@@ -2,7 +2,6 @@
 using FISCA.Presentation;
 using K12.Data;
 using FISCA.Presentation.Controls;
-//using Framework;
 using FISCA.Permission;
 
 namespace K12.Behavior.TheCadre
@@ -21,17 +20,17 @@ namespace K12.Behavior.TheCadre
             if (UserPermission.Editable || UserPermission.Viewable)
                 K12.Presentation.NLDPanels.Student.AddDetailBulider(new FISCA.Presentation.DetailBulider<StudentCadreItem>());
 
-            string URL班級幹部總表 = "ischool/高中系統/共用/學務/班級/報表/班級幹部總表";
-            string URL學校幹部總表 = "ischool/高中系統/共用/學務/班級/報表/學校幹部總表";
+            string URL班級幹部總表 = "ischool/幹部系統/共用/學務/班級/報表/班級幹部總表";
+            string URL學校幹部總表 = "ischool/幹部系統/共用/學務/班級/報表/學校幹部總表";
             //URL
-            string URL學生幹部證明單 = "ischool/高中系統/共用/學務/學生/報表/幹部證明單";
-            string URL班級幹部登錄 = "ischool/高中系統/共用/學務/班級/班級幹部登錄";
-            string URL匯出擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯出/擔任幹部紀錄";
-            string URL匯入擔任幹部記錄 = "ischool/高中系統/共用/學務/學生/匯入/擔任幹部紀錄";
-            string URL幹部名稱管理 = "ischool/高中系統/共用/學務/學務作業/幹部名稱管理";
-            string URL學校幹部登錄 = "ischool/高中系統/共用/學務/學務作業/學校幹部登錄";
-            string URL幹部批次修改 = "ischool/高中系統/共用/學務/學務作業/幹部批次修改";
-            string URL幹部敘獎作業 = "ischool/高中系統/共用/學務/學務作業/幹部敘獎作業";
+            string URL學生幹部證明單 = "ischool/幹部系統/共用/學務/學生/報表/幹部證明單";
+            string URL班級幹部登錄 = "ischool/幹部系統/共用/學務/班級/班級幹部登錄";
+            string URL匯出擔任幹部記錄 = "ischool/幹部系統/共用/學務/學生/匯出/擔任幹部紀錄";
+            string URL匯入擔任幹部記錄 = "ischool/幹部系統/共用/學務/學生/匯入/擔任幹部紀錄";
+            string URL幹部名稱管理 = "ischool/幹部系統/共用/學務/學務作業/幹部名稱管理";
+            string URL學校幹部登錄 = "ischool/幹部系統/共用/學務/學務作業/學校幹部登錄";
+            string URL幹部批次修改 = "ischool/幹部系統/共用/學務/學務作業/幹部批次修改";
+            string URL幹部敘獎作業 = "ischool/幹部系統/共用/學務/學務作業/幹部敘獎作業";
             //註冊功能
             #region URL班級幹部總表
             FISCA.Features.Register(URL班級幹部總表, arg =>

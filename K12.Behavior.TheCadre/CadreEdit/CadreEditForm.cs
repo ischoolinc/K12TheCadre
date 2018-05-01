@@ -149,6 +149,11 @@ namespace K12.Behavior.TheCadre.CadreEdit
             }
             if (condition == "班級")
             {
+                if (classCbx.Text == "")
+                {
+                    MessageBox.Show("請選擇查詢班級!");
+                    return;
+                }
                 string classID = classDic[classCbx.Text];
                 whereList.Add("class.id = " + classID);
             }
@@ -159,11 +164,27 @@ namespace K12.Behavior.TheCadre.CadreEdit
             }
             if (condition == "學號")
             {
+                if (studentNumberTbx.Text == "")
+                {
+                    MessageBox.Show("請輸入查詢學生之學號!");
+                    return;
+                }
                 string studentNumber = studentNumberTbx.Text;
                 whereList.Add("student.student_number = " + "'" + studentNumber + "'");
             }
             if (condition == "班級座號")
             {
+                int i = 0;
+                if (!int.TryParse(seatNoTbx.Text,out i))
+                {
+                    MessageBox.Show("座號格式錯誤!");
+                    return;
+                }
+                if (classCbx.Text == "" || seatNoTbx.Text == "")
+                {
+                    MessageBox.Show("請輸入查詢學生之班級、座號!");
+                    return;
+                }
                 string classID = classDic[classCbx.Text];
                 string seatNo = seatNoTbx.Text;
                 whereList.Add("class.id = " + classID);

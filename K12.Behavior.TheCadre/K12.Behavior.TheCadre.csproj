@@ -317,6 +317,9 @@
     <EmbeddedResource Include="CadreEdit\CadreEditForm.resx">
       <DependentUpon>CadreEditForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CadreMeritManage\CadreMeritManage.resx">
+      <DependentUpon>CadreMeritManage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.resx">
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </EmbeddedResource>

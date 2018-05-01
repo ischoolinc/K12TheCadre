@@ -323,6 +323,23 @@ WHERE
             this.Close();
         }
 
+        private bool checkColValue()
+        {
+            bool correctValue = true;
+            foreach (DataGridViewRow dgv in dataGridViewX1.Rows)
+            {
+                int index = 0;
+                for (int i = 5; i < 8; i++)
+                {
+                    if (!int.TryParse("" + dgv.Cells[i].Value, out index))
+                    {
+                        correctValue = false;
+                    }
+                }
+            }
+            return correctValue;
+        }
+
         private void saveBtn_Click(object sender, EventArgs e)
         {
             string schoolYear = schoolYearCbx.Text;
@@ -331,6 +348,12 @@ WHERE
             string registerDate = dateTimeInput1.Value.ToString("yyyy/MM/dd");
             string merit_flag = "1";
             List<string> dataRow = new List<string>();
+
+            if (!checkColValue())
+            {
+                MessageBox.Show("資料格式錯誤!");
+                return;
+            }
 
             foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
             {
@@ -348,15 +371,15 @@ WHERE
 
                         string data = string.Format(@"
 SELECT
-    {0}::INT AS school_year
-    , {1}::INT AS semester
-    , '{2}'::timestamp AS occur_date
-    , '{3}'::TEXT AS reason
-    , '{4}'::TEXT AS detail
-    , {5}::INT AS ref_student_id
-    , {6}::INT AS merit_flag
-    , '{7}'::timestamp AS register_date
-                        ", schoolYear, semester, occurDate, reason, detail, studentID, merit_flag, registerDate);
+{0}::INT AS school_year
+, {1}::INT AS semester
+, '{2}'::timestamp AS occur_date
+, '{3}'::TEXT AS reason
+, '{4}'::TEXT AS detail
+, {5}::INT AS ref_student_id
+, {6}::INT AS merit_flag
+, '{7}'::timestamp AS register_date
+                    ", schoolYear, semester, occurDate, reason, detail, studentID, merit_flag, registerDate);
 
                         dataRow.Add(data);
                     }
@@ -406,5 +429,21 @@ FROM
 
         }
 
+        private void dataGridViewX1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 5 || e.ColumnIndex == 6 || e.ColumnIndex == 7)
+            {
+                int i = 0;
+                string colValue = "" + dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                if (!int.TryParse(colValue, out i))
+                {
+                    dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "只允許填入數字!";
+                }
+                if (int.TryParse(colValue, out i))
+                {
+                    dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "";
+                }
+            }
+        }
     }
 }
