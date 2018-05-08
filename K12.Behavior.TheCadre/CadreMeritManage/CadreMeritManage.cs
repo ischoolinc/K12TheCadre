@@ -331,7 +331,7 @@ WHERE
                 int index = 0;
                 for (int i = 5; i < 8; i++)
                 {
-                    if (!int.TryParse("" + dgv.Cells[i].Value, out index))
+                    if (!int.TryParse("" + dgv.Cells[i].Value, out index) && "" + dgv.Cells[i].Value != "") // 空值預設為0，這邊不處理
                     {
                         correctValue = false;
                     }
@@ -344,8 +344,8 @@ WHERE
         {
             string schoolYear = schoolYearCbx.Text;
             string semester = semesterCbx.Text;
-            string occurDate = DateTime.Now.ToString("yyyy/MM/dd");
-            string registerDate = dateTimeInput1.Value.ToString("yyyy/MM/dd");
+            string occurDate = dateTimeInput1.Value.ToString("yyyy/MM/dd"); //  發生日期
+            string registerDate = DateTime.Now.ToString("yyyy/MM/dd"); // 獎勵登錄日期
             string merit_flag = "1";
             List<string> dataRow = new List<string>();
 

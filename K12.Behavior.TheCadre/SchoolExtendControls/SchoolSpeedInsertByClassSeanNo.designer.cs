@@ -98,7 +98,6 @@
             this.checkBoxX1.TabIndex = 7;
             this.checkBoxX1.Text = "儲存完成後進行敘獎作業";
             this.checkBoxX1.TextColor = System.Drawing.Color.Red;
-            this.checkBoxX1.Visible = false;
             this.checkBoxX1.CheckedChanged += new System.EventHandler(this.checkBoxX1_CheckedChanged);
             // 
             // linkLabel1
@@ -137,7 +136,7 @@
             this.dataGridViewX1.Location = new System.Drawing.Point(11, 45);
             this.dataGridViewX1.Name = "dataGridViewX1";
             this.dataGridViewX1.RowTemplate.Height = 24;
-            this.dataGridViewX1.Size = new System.Drawing.Size(405, 358);
+            this.dataGridViewX1.Size = new System.Drawing.Size(405, 334);
             this.dataGridViewX1.TabIndex = 0;
             this.dataGridViewX1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellEndEdit);
             // 

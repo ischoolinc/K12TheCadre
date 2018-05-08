@@ -222,9 +222,7 @@ namespace K12.Behavior.TheCadre
             };
 
             #endregion
-
-            
-
+           
             #region 權限控管
 
             Catalog detail2;
