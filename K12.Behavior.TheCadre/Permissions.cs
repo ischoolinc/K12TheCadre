@@ -11,8 +11,8 @@ namespace K12.Behavior.TheCadre
     /// </summary>
     public static class Permissions
     {
-
-        public static string 幹部記錄 { get { return "K12.Student.TheCadre.Detail00040"; } }
+        public static string 幹部記錄 { get { return "6B1F4596-D2C8-44E2-ADFD-D01E9E61B796"; } }
+        //public static string 幹部記錄 { get { return "K12.Student.TheCadre.Detail00040"; } }
         //public static string 幹部記錄_國中 { get { return "Behavior.TheCadre.Detail00040"; } }
 
         public static string 學生幹部證明單 { get { return "K12.Student.TheCadre.Report00060"; } }

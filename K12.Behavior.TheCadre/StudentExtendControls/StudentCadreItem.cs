@@ -16,7 +16,7 @@ using Campus.Windows;
 
 namespace K12.Behavior.TheCadre
 {
-    [FISCA.Permission.FeatureCode("K12.Student.TheCadre.Detail00040", "幹部記錄")]
+    [FISCA.Permission.FeatureCode("6B1F4596-D2C8-44E2-ADFD-D01E9E61B796", "幹部記錄")]
     public partial class StudentCadreItem : DetailContentBase
     {
         internal static FISCA.Permission.FeatureAce UserPermission;
