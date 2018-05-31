@@ -137,12 +137,12 @@
     <value>..\Resources\合併欄位總表.doc;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="學校幹部總表_範本" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\學校幹部總表_範本.xls;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\resources\學校幹部總表_範本.xls;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="學生幹部證明單" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\學生幹部證明單.doc;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="班級幹部總表_範本" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\班級幹部總表_範本.xls;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\resources\班級幹部總表_範本.xlsx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

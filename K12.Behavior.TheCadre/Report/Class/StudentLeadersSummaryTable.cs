@@ -96,8 +96,10 @@ namespace K12.Behavior.TheCadre
             Range ptEachRow = ptws.Cells.CreateRange(2, 1, false);
 
             Workbook wb = new Workbook();
+            
             wb.Copy(template);
-            Worksheet ws = wb.Worksheets[0];
+            Worksheet ws = wb.Worksheets[0]; 
+            Style style = ws.Cells.GetCellStyle(2, 0); 
 
             int studentCount = 0;
             int cutPageIndex = 49;
@@ -111,21 +113,24 @@ namespace K12.Behavior.TheCadre
                     count += cadre.CadreList.Count;
                 }
                 if (count == 0) continue;
-
+                
                 //int SetOutline = 1;
                 //複製 Header
-                ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
-
+                //ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
+                //ws.Cells.sty
                 string SchoolNameAndTitle = "班級幹部總表";
                 ws.Cells[studentCount, 0].PutValue("班級：" + class_Name); //班級名稱
+                ws.Cells[studentCount, 0].SetStyle(style);
                 ws.Cells[studentCount, 2].PutValue(SchoolNameAndTitle); //學校名稱 與 報表名稱
+                ws.Cells[studentCount, 2].SetStyle(style);
+
                 if (sql._TeacherNameDic.ContainsKey(class_Name))
                     ws.Cells[studentCount, 7].PutValue("導師：" + sql._TeacherNameDic[class_Name]); //班導師
                 else
                     ws.Cells[studentCount, 7].PutValue("導師："); //班導師
-
+                ws.Cells[studentCount, 7].SetStyle(style);
                 //把班級標頭拷貝下來
-                Range ClassHeader = ws.Cells.CreateRange(studentCount, 2, false);
+               // Range ClassHeader = ws.Cells.CreateRange(studentCount, 2, false);
 
                 studentCount += 2;
                 foreach (StudentCadre cadre in sql._StudentObjDic[class_Name]) //每一個學生幹部資料
@@ -138,12 +143,12 @@ namespace K12.Behavior.TheCadre
                             cutStudentIndex = 1;
                             //ws.HPageBreaks.Add(studentCount, 7);
                             ws.HorizontalPageBreaks.Add(studentCount, 7);
-                            ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
+                            //ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
                             studentCount += 2;
                         }
 
 
-                        ws.Cells.CreateRange(studentCount, 1, false).Copy(ptEachRow);
+                        //ws.Cells.CreateRange(studentCount, 1, false).Copy(ptEachRow);
                         //if (SetOutline % 5 == 0 && SetOutline != 0)
                         //{
                         //    ws.Cells.CreateRange(studentCount, 0, 1, 8).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
@@ -158,6 +163,15 @@ namespace K12.Behavior.TheCadre
                         ws.Cells[studentCount, 5].PutValue(obj.ReferenceType); //幹部類型
                         ws.Cells[studentCount, 6].PutValue(obj.CadreName); //幹部名稱
                         ws.Cells[studentCount, 7].PutValue(obj.Text); //說明
+
+                        ws.Cells[studentCount, 0].SetStyle(style);
+                        ws.Cells[studentCount, 1].SetStyle(style);
+                        ws.Cells[studentCount, 2].SetStyle(style);
+                        ws.Cells[studentCount, 3].SetStyle(style);
+                        ws.Cells[studentCount, 4].SetStyle(style);
+                        ws.Cells[studentCount, 5].SetStyle(style);
+                        ws.Cells[studentCount, 6].SetStyle(style);
+                        ws.Cells[studentCount, 7].SetStyle(style);
                         //SetOutline++;
                         studentCount++;
                     }
@@ -170,7 +184,7 @@ namespace K12.Behavior.TheCadre
             string path = Path.Combine(Application.StartupPath, "Reports");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            path = Path.Combine(path, "班級幹部總表" + ".xlt");
+            path = Path.Combine(path, "班級幹部總表" + ".xlsx");
             e.Result = new object[] { "班級幹部總表", path, wb };
         }
 
