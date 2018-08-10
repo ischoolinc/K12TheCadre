@@ -115,6 +115,8 @@ WHERE
             string condition = string.Format(@"
                 cadre.schoolyear = '{0}'
                 AND cadre.semester = '{1}'
+                AND student.status IN(1,2)
+                AND student.id IS NOT NULL
             ", schoolYearCbx.Text, semesterCbx.Text);
             if (cadreTypeCbx.Text != "--全部--" && cadreTypeCbx.Text != "")
             {

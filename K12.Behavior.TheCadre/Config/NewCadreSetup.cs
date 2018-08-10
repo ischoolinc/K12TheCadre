@@ -67,7 +67,7 @@ namespace K12.Behavior.TheCadre
             CadreTypeList.Add("社團幹部");
             CadreTypeList.Add("學校幹部");
 
-            timerString();
+            //timerString();
 
             K12.Data.Configuration.ConfigData DateConfig = K12.Data.School.Configuration["幹部模組_幹部名稱清單"];
             //DateConfig["幹部名稱_輸入敘獎資料"] = KeyInMerit.Checked.ToString();
@@ -439,25 +439,25 @@ namespace K12.Behavior.TheCadre
 
         #region 提示訊息的切換
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            UpdateTip();
-        }
+        //private void timer1_Tick(object sender, EventArgs e)
+        //{
+        //    UpdateTip();
+        //}
 
-        private void UpdateTip()
-        {
-            string msg = timerList2.Dequeue(); //移出字串(最前端)
-            labelX1.Text = msg; //修改說明
-            timerList2.Enqueue(msg); //加回字串(最後)
-        }
+        //private void UpdateTip()
+        //{
+        //    string msg = timerList2.Dequeue(); //移出字串(最前端)
+        //    labelX1.Text = msg; //修改說明
+        //    timerList2.Enqueue(msg); //加回字串(最後)
+        //}
 
-        private void timerString()
-        {
-            timerList2.Enqueue("說明：(舊有)幹部清單已提供匯出，可於匯出整理後匯入新畫面清單中。");
-            timerList2.Enqueue("說明：幹部類型分為(班級幹部,社團幹部,學校幹部)。");
-            timerList2.Enqueue("說明：(獎勵事由)欄位可直接輸入(獎勵事由)代碼。");
-            timerList2.Enqueue("說明：排序是依(幹部名稱)分類後才依(排序)數字進行排序。");
-        } 
+        //private void timerString()
+        //{
+        //    timerList2.Enqueue("說明：(舊有)幹部清單已提供匯出，可於匯出整理後匯入新畫面清單中。");
+        //    timerList2.Enqueue("說明：幹部類型分為(班級幹部,社團幹部,學校幹部)。");
+        //    timerList2.Enqueue("說明：(獎勵事由)欄位可直接輸入(獎勵事由)代碼。");
+        //    timerList2.Enqueue("說明：排序是依(幹部名稱)分類後才依(排序)數字進行排序。");
+        //} 
 
         #endregion
 
@@ -546,6 +546,11 @@ namespace K12.Behavior.TheCadre
             {
                 this.Close();
             }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            (new frmDescription()).ShowDialog();
         }
     }
 }

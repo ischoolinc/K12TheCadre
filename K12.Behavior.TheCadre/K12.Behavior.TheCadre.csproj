@@ -215,6 +215,12 @@
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </Compile>
     <Compile Include="ClassExtendControls\new\Controller.cs" />
+    <Compile Include="Config\frmDescription.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Config\frmDescription.Designer.cs">
+      <DependentUpon>frmDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Report\School\SQLselect_School.cs" />
     <Compile Include="Report\School\SchoolLeadersSummaryTable.cs">
       <SubType>Form</SubType>
@@ -325,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClassExtendControls\new\MutiMeritDemerit.resx">
       <DependentUpon>MutiMeritDemerit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\frmDescription.resx">
+      <DependentUpon>frmDescription.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Report\School\SchoolLeadersSummaryTable.resx">
       <DependentUpon>SchoolLeadersSummaryTable.cs</DependentUpon>
