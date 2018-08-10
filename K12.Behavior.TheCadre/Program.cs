@@ -215,7 +215,7 @@ namespace K12.Behavior.TheCadre
                 (new CadreMeritManage.CadreMeritManage()).ShowDialog();
             });
             RibbonSpeedInsert["幹部敘獎作業"].Enable = Permissions.幹部敘獎作業權限;
-            RibbonSpeedInsert["幹部敘獎作業"].Image = Properties.Resources.stamp_paper_fav_128;
+            RibbonSpeedInsert["幹部敘獎作業"].Image = Properties.Resources.diplom_fav_64;
             RibbonSpeedInsert["幹部敘獎作業"].Click += delegate
             {
                 Features.Invoke(URL幹部敘獎作業);

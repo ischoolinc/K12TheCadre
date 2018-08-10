@@ -580,29 +580,36 @@ namespace K12.Behavior.TheCadre.CadreEdit
             }
 
             CadreNameEditForm cnef = new CadreNameEditForm(cardType);
-            cnef.ShowDialog();
-            string cardName = cnef._cadreName;
+            DialogResult result = cnef.ShowDialog();
 
-            foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
+            if (result == DialogResult.Yes)
             {
-                row.Cells[7].Value = cardName;
-                row.Cells[7].Style.BackColor = Color.PowderBlue;
-                row.HeaderCell.Value = "修改";
+                string cardName = cnef._cadreName;
+
+                foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
+                {
+                    row.Cells[7].Value = cardName;
+                    row.Cells[7].Style.BackColor = Color.PowderBlue;
+                    row.HeaderCell.Value = "修改";
+                }
             }
         }
 
         private void detailItem_Click(object sender, EventArgs e)
         {
             DetailEditForm def = new DetailEditForm();
-            def.ShowDialog();
+            DialogResult result = def.ShowDialog();
 
-            string detail = def._detail;
-
-            foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
+            if (result == DialogResult.Yes)
             {
-                row.Cells[8].Value = detail;
-                row.Cells[8].Style.BackColor = Color.PowderBlue;
-                row.HeaderCell.Value = "修改";
+                string detail = def._detail;
+
+                foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
+                {
+                    row.Cells[8].Value = detail;
+                    row.Cells[8].Style.BackColor = Color.PowderBlue;
+                    row.HeaderCell.Value = "修改";
+                }
             }
         }
 

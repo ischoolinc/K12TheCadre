@@ -661,11 +661,11 @@
             // 
             this.labelX11.BackgroundStyle.Class = "";
             this.labelX11.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX11.Location = new System.Drawing.Point(12, 571);
+            this.labelX11.Location = new System.Drawing.Point(12, 578);
             this.labelX11.Name = "labelX11";
-            this.labelX11.Size = new System.Drawing.Size(413, 37);
+            this.labelX11.Size = new System.Drawing.Size(413, 23);
             this.labelX11.TabIndex = 15;
-            this.labelX11.Text = "事由內容：［幹部］［幹部類別］［幹部名稱］\r\n為判斷已有敘獎記錄的條件，可在之後加上說明文字。\r\n";
+            this.labelX11.Text = "提醒: 灰色資料行代表幹部紀錄已登錄敘獎。";
             // 
             // reasonTbx
             // 
@@ -680,7 +680,6 @@
             this.reasonTbx.Name = "reasonTbx";
             this.reasonTbx.Size = new System.Drawing.Size(200, 25);
             this.reasonTbx.TabIndex = 16;
-            this.reasonTbx.Text = "表現優異";
             this.reasonTbx.TextChanged += new System.EventHandler(this.reasonTbx_TextChanged);
             // 
             // CadreMeritManage
@@ -710,6 +709,7 @@
             this.MinimizeBox = true;
             this.Name = "CadreMeritManage";
             this.Text = "幹部敘獎作業";
+            this.Load += new System.EventHandler(this.CadreMeritManage_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
             this.groupPanel1.ResumeLayout(false);
             this.groupPanel3.ResumeLayout(false);

@@ -73,6 +73,36 @@ namespace K12.Behavior.TheCadre.Properties {
         /// <summary>
         ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
         /// </summary>
+        internal static System.Drawing.Bitmap certificated_fav_64 {
+            get {
+                object obj = ResourceManager.GetObject("certificated_fav_64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
+        internal static System.Drawing.Bitmap contract_fav_128 {
+            get {
+                object obj = ResourceManager.GetObject("contract_fav_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
+        internal static System.Drawing.Bitmap diplom_fav_64 {
+            get {
+                object obj = ResourceManager.GetObject("diplom_fav_64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
         internal static System.Drawing.Bitmap niche_fav_64 {
             get {
                 object obj = ResourceManager.GetObject("niche_fav_64", resourceCulture);

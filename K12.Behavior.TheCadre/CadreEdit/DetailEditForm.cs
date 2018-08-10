@@ -22,6 +22,7 @@ namespace K12.Behavior.TheCadre.CadreEdit
         private void confirmBtn_Click(object sender, EventArgs e)
         {
             _detail = detailTbx.Text;
+            this.DialogResult = DialogResult.Yes;
             this.Close();
         }
 

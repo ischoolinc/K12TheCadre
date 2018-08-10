@@ -12,37 +12,73 @@ using FISCA.Data;
 using FISCA.DSAUtil;
 using Framework.Feature;
 using System.Xml;
+using FISCA.UDT;
 
 namespace K12.Behavior.TheCadre.CadreMeritManage
 {
     public partial class CadreMeritManage : BaseForm
     {
-
-        Dictionary<string, string> ReasonDic = new Dictionary<string, string>();
+        private Dictionary<string, ClassCadreNameObj> _dicCadreNameObByKey = new Dictionary<string, ClassCadreNameObj>();
         private int _schoolYear = int.Parse(School.DefaultSchoolYear);
         private int _semester = int.Parse(School.DefaultSemester);
         private bool initFinish = false;
+        private AccessHelper _access = new AccessHelper();
 
         public CadreMeritManage()
         {
             InitializeComponent();
+        }
 
-            schoolYearCbx.Items.Add(_schoolYear + 1);
-            schoolYearCbx.Items.Add(_schoolYear);
-            schoolYearCbx.Items.Add(_schoolYear - 1);
-            schoolYearCbx.SelectedIndex = 1;
+        private void CadreMeritManage_Load(object sender, EventArgs e)
+        {
+            #region Init _dicCadreNameOb
+            {
+                // 取得幹部敘獎物件資料
+                List<ClassCadreNameObj> listCNO = this._access.Select<ClassCadreNameObj>();
 
-            semesterCbx.Items.Add(1);
-            semesterCbx.Items.Add(2);
-            semesterCbx.SelectedIndex = _semester - 1;
+                // 資料整理
+                foreach (ClassCadreNameObj obj in listCNO)
+                {
+                    string key = string.Format("{0}_{1}", obj.NameType, obj.CadreName);
 
-            cadreTypeCbx.Items.Add("--全部--");
-            cadreTypeCbx.Items.Add("班級幹部");
-            cadreTypeCbx.Items.Add("社團幹部");
-            cadreTypeCbx.Items.Add("學校幹部");
-            cadreTypeCbx.SelectedIndex = 0;
+                    if (!this._dicCadreNameObByKey.ContainsKey(key))
+                    {
+                        this._dicCadreNameObByKey.Add(key, obj);
+                    }
+                }
+            }
+            #endregion
 
-            string sql = string.Format(@"
+            #region Init schoolYear
+            {
+                schoolYearCbx.Items.Add(_schoolYear + 1);
+                schoolYearCbx.Items.Add(_schoolYear);
+                schoolYearCbx.Items.Add(_schoolYear - 1);
+                schoolYearCbx.SelectedIndex = 1;
+            }
+            #endregion
+
+            #region Init semester
+            {
+                semesterCbx.Items.Add(1);
+                semesterCbx.Items.Add(2);
+                semesterCbx.SelectedIndex = _semester - 1;
+            }
+            #endregion
+
+            #region Init cadreType
+            {
+                cadreTypeCbx.Items.Add("--全部--");
+                cadreTypeCbx.Items.Add("班級幹部");
+                cadreTypeCbx.Items.Add("社團幹部");
+                cadreTypeCbx.Items.Add("學校幹部");
+                cadreTypeCbx.SelectedIndex = 0;
+            }
+            #endregion
+
+            #region Init cadreName
+            {
+                string sql = string.Format(@"
 SELECT DISTINCT 
     cadrename
 FROM
@@ -52,15 +88,17 @@ WHERE
     AND semester = '{1}'
     AND cadreName IS NOT NULL
                 ", _schoolYear, _semester);
-            QueryHelper qh = new QueryHelper();
-            DataTable dt = qh.Select(sql);
-            cadreNameCbx.Items.Add("--全部--");
-            foreach (DataRow row in dt.Rows)
-            {
-                cadreNameCbx.Items.Add("" + row["cadrename"]);
+                QueryHelper qh = new QueryHelper();
+                DataTable dt = qh.Select(sql);
+                cadreNameCbx.Items.Add("--全部--");
+                foreach (DataRow row in dt.Rows)
+                {
+                    cadreNameCbx.Items.Add("" + row["cadrename"]);
+                }
+                cadreNameCbx.SelectedIndex = 0;
             }
-            cadreNameCbx.SelectedIndex = 0;
-
+            #endregion
+            
             dateTimeInput1.Value = DateTime.Now;
 
             ReloadDataGridView();
@@ -136,30 +174,108 @@ WHERE
             // 取得學生獎勵紀錄
             List<DisciplineRecord> meritList = Discipline.SelectByStudentIDs(studentIDList);
 
+            // 學生獎勵紀錄整理: Key 1.學生編號 2.獎勵是由 
+            Dictionary<string, Dictionary<string, DisciplineRecord>> dicMeritRecordByStudentIDByReason = new Dictionary<string, Dictionary<string, DisciplineRecord>>();
+
             foreach (DisciplineRecord merit in meritList)
             {
                 if ("" + merit.SchoolYear == schoolYearCbx.Text && "" + merit.Semester == semesterCbx.Text && merit.MeritFlag == "1")
                 {
-                    foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
+                    if (!dicMeritRecordByStudentIDByReason.ContainsKey(merit.RefStudentID))
                     {
-                        bool hadMeritRecord = false;
-                        if (merit.RefStudentID == "" + dgvrow.Tag)
+                        dicMeritRecordByStudentIDByReason.Add(merit.RefStudentID, new Dictionary<string, DisciplineRecord>());
+                    }
+                    if (!dicMeritRecordByStudentIDByReason[merit.RefStudentID].ContainsKey(merit.Reason))
+                    {
+                        dicMeritRecordByStudentIDByReason[merit.RefStudentID].Add(merit.Reason, merit);
+                    }
+                }
+            }
+
+            foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
+            {
+                bool hadMeritRecord = false;
+                string cadreType = "" + dgvrow.Cells[3].Value;
+                string cadreName = "" + dgvrow.Cells[4].Value;
+                string studentID = "" + dgvrow.Tag;
+
+                if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
+                {
+                    string reasonKey = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
+                    List<string> listReason = dicMeritRecordByStudentIDByReason[studentID].Keys.ToList();
+
+                    foreach (string reason in listReason)
+                    {
+                        if (reason.Contains(reasonKey)) // 有獎勵紀錄
                         {
-                            string reason = merit.Reason;
-                            hadMeritRecord = reason.Contains(string.Format("[幹部][{0}][{1}]", dgvrow.Cells[3].Value, dgvrow.Cells[4].Value));
-                        }
-                        if (hadMeritRecord) // 已有敘獎記錄
-                        {
+                            DisciplineRecord merit = dicMeritRecordByStudentIDByReason[studentID][reason];
+
                             dgvrow.Cells[5].Value = merit.MeritA;
                             dgvrow.Cells[6].Value = merit.MeritB;
                             dgvrow.Cells[7].Value = merit.MeritC;
                             dgvrow.Cells[8].Value = merit.Reason;
                             dgvrow.ReadOnly = true;
                             dgvrow.DefaultCellStyle.BackColor = Color.LightGray;
+
+                            hadMeritRecord = true;
                         }
                     }
                 }
+                if (!hadMeritRecord) // 沒有獎勵紀錄，但幹部紀錄有對應到幹部敘獎物件的話: 初始敘獎資料
+                {
+                    string key = string.Format("{0}_{1}", cadreType, cadreName);
+
+                    if (this._dicCadreNameObByKey.ContainsKey(key))
+                    {
+                        ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
+                        dgvrow.Cells[5].Value = obj.MeritA;
+                        dgvrow.Cells[6].Value = obj.MeritB;
+                        dgvrow.Cells[7].Value = obj.MeritC;
+                        dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
+                    }
+                }
             }
+
+            //foreach (DisciplineRecord merit in meritList)
+            //{
+            //    if ("" + merit.SchoolYear == schoolYearCbx.Text && "" + merit.Semester == semesterCbx.Text && merit.MeritFlag == "1")
+            //    {
+            //        foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
+            //        {
+            //            bool hadMeritRecord = false;
+            //            string cadreType = "" + dgvrow.Cells[3].Value;
+            //            string cadreName = "" + dgvrow.Cells[4].Value;
+
+            //            if (merit.RefStudentID == "" + dgvrow.Tag)
+            //            {
+            //                string reason = merit.Reason;
+            //                hadMeritRecord = reason.Contains(string.Format("[幹部][{0}][{1}]", cadreType, cadreName));
+            //            }
+            //            if (hadMeritRecord) // 已有獎勵記錄
+            //            {
+            //                dgvrow.Cells[5].Value = merit.MeritA;
+            //                dgvrow.Cells[6].Value = merit.MeritB;
+            //                dgvrow.Cells[7].Value = merit.MeritC;
+            //                dgvrow.Cells[8].Value = merit.Reason;
+            //                dgvrow.ReadOnly = true;
+            //                dgvrow.DefaultCellStyle.BackColor = Color.LightGray;
+            //            }
+            //            if (!hadMeritRecord) // 沒有獎勵紀錄，但幹部紀錄有對應到幹部敘獎物件的話: 初始敘獎資料
+            //            {
+            //                string key = string.Format("{0}_{1}", cadreType, cadreName);
+
+            //                if (this._dicCadreNameObByKey.ContainsKey(key))
+            //                {
+            //                    ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
+            //                    dgvrow.Cells[5].Value = obj.MeritA;
+            //                    dgvrow.Cells[6].Value = obj.MeritB;
+            //                    dgvrow.Cells[7].Value = obj.MeritC;
+            //                    dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
             #endregion
         }
@@ -445,5 +561,6 @@ FROM
                 }
             }
         }
+
     }
 }
