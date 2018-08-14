@@ -13,12 +13,15 @@ using FISCA.DSAUtil;
 using Framework.Feature;
 using System.Xml;
 using FISCA.UDT;
+using FISCA.DSAUtil;
+using Framework.Feature;
 
 namespace K12.Behavior.TheCadre.CadreMeritManage
 {
     public partial class CadreMeritManage : BaseForm
     {
         private Dictionary<string, ClassCadreNameObj> _dicCadreNameObByKey = new Dictionary<string, ClassCadreNameObj>();
+        private Dictionary<string, string> _dicReasonByKey = new Dictionary<string, string>();
         private int _schoolYear = int.Parse(School.DefaultSchoolYear);
         private int _semester = int.Parse(School.DefaultSemester);
         private bool initFinish = false;
@@ -98,7 +101,34 @@ WHERE
                 cadreNameCbx.SelectedIndex = 0;
             }
             #endregion
-            
+
+            #region Init Reason
+            {
+                KeyValuePair<string, string> fkvp = new KeyValuePair<string, string>("", "");
+                this.cbxReason.Items.Add(fkvp);
+
+                DSResponse dsrsp = Config.GetDisciplineReasonList();
+                foreach (XmlElement element in dsrsp.GetContent().GetElements("Reason"))
+                {
+                    if (element.GetAttribute("Type") == "獎勵")
+                    {
+                        string k = element.GetAttribute("Code") + "-" + element.GetAttribute("Description");
+                        string v = element.GetAttribute("Description");
+                        KeyValuePair<string, string> kvp = new KeyValuePair<string, string>(k, v);
+                        if (!_dicReasonByKey.ContainsKey(element.GetAttribute("Code")))
+                        {
+                            _dicReasonByKey.Add(element.GetAttribute("Code"), v);
+                        }
+                        
+                        this.cbxReason.Items.Add(kvp);
+                    }
+                }
+                this.cbxReason.DisplayMember = "Key";
+                this.cbxReason.ValueMember = "Value";
+                this.cbxReason.SelectedIndex = 0;
+            }
+            #endregion
+
             dateTimeInput1.Value = DateTime.Now;
 
             ReloadDataGridView();
@@ -110,6 +140,7 @@ WHERE
         {
             dataGridViewX1.Rows.Clear();
             List<string> studentIDList = new List<string>();
+
             #region Init DataGridView
 
             string condition = string.Format(@"
@@ -127,19 +158,26 @@ WHERE
                 condition += string.Format("AND cadre.cadrename = '{0}'", cadreNameCbx.Text);
             }
             string sql = string.Format(@"
-SELECT
-    student.id
-    , class.class_name
-    , student.seat_no
-    , student.name
-    , cadre.cadreName
-    , cadre.referencetype
-FROM
-    $behavior.thecadre AS cadre
-    LEFT OUTER JOIN student
-        ON student.id = cadre.studentid::BIGINT
-    LEFT OUTER JOIN class
-        ON class.id = student.ref_class_id
+SELECT 
+	class.class_name
+    , student.id
+	, student.seat_no
+	, student.name
+	, cadre.referencetype
+	, cadre.cadrename
+	--, cadretype.merita
+	--, cadretype.meritb
+	--, cadretype.meritc
+	--, cadretype.reason
+FROM 
+	$behavior.thecadre  AS cadre
+	LEFT OUTER JOIN student
+		ON student.id = cadre.studentid::BIGINT
+	LEFT OUTER JOIN class
+		ON class.id = student.ref_class_id
+	LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
+		ON cadretype.nametype = cadre.referencetype
+			AND cadretype.cadrename = cadre.cadrename
 WHERE
     {0}
                 ", condition);
@@ -157,7 +195,11 @@ WHERE
                 dgvrow.Cells[index++].Value = "" + row["name"];
                 dgvrow.Cells[index++].Value = "" + row["referencetype"];
                 dgvrow.Cells[index++].Value = "" + row["cadrename"];
-                dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", row["referencetype"], row["cadrename"], reasonTbx.Text);
+                //dgvrow.Cells[index++].Value = "" + row["merita"];
+                //dgvrow.Cells[index++].Value = "" + row["meritb"];
+                //dgvrow.Cells[index++].Value = "" + row["meritc"];
+                //dgvrow.Cells[8].Value = "" + row["reason"];
+                //dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", row["referencetype"], row["cadrename"], reasonTbx.Text);
 
                 dgvrow.Tag = "" + row["id"]; // StudentID
 
@@ -203,7 +245,8 @@ WHERE
 
                 if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
                 {
-                    string reasonKey = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
+                    //string reasonKey = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
+                    string reasonKey = "[幹部]";
                     List<string> listReason = dicMeritRecordByStudentIDByReason[studentID].Keys.ToList();
 
                     foreach (string reason in listReason)
@@ -233,51 +276,13 @@ WHERE
                         dgvrow.Cells[5].Value = obj.MeritA;
                         dgvrow.Cells[6].Value = obj.MeritB;
                         dgvrow.Cells[7].Value = obj.MeritC;
-                        dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
+                        dgvrow.Cells[8].Value = obj.Reason;
+                        dgvrow.ReadOnly = true;
+                        dgvrow.DefaultCellStyle.BackColor = Color.LightGreen;
+                        //dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
                     }
                 }
             }
-
-            //foreach (DisciplineRecord merit in meritList)
-            //{
-            //    if ("" + merit.SchoolYear == schoolYearCbx.Text && "" + merit.Semester == semesterCbx.Text && merit.MeritFlag == "1")
-            //    {
-            //        foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
-            //        {
-            //            bool hadMeritRecord = false;
-            //            string cadreType = "" + dgvrow.Cells[3].Value;
-            //            string cadreName = "" + dgvrow.Cells[4].Value;
-
-            //            if (merit.RefStudentID == "" + dgvrow.Tag)
-            //            {
-            //                string reason = merit.Reason;
-            //                hadMeritRecord = reason.Contains(string.Format("[幹部][{0}][{1}]", cadreType, cadreName));
-            //            }
-            //            if (hadMeritRecord) // 已有獎勵記錄
-            //            {
-            //                dgvrow.Cells[5].Value = merit.MeritA;
-            //                dgvrow.Cells[6].Value = merit.MeritB;
-            //                dgvrow.Cells[7].Value = merit.MeritC;
-            //                dgvrow.Cells[8].Value = merit.Reason;
-            //                dgvrow.ReadOnly = true;
-            //                dgvrow.DefaultCellStyle.BackColor = Color.LightGray;
-            //            }
-            //            if (!hadMeritRecord) // 沒有獎勵紀錄，但幹部紀錄有對應到幹部敘獎物件的話: 初始敘獎資料
-            //            {
-            //                string key = string.Format("{0}_{1}", cadreType, cadreName);
-
-            //                if (this._dicCadreNameObByKey.ContainsKey(key))
-            //                {
-            //                    ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
-            //                    dgvrow.Cells[5].Value = obj.MeritA;
-            //                    dgvrow.Cells[6].Value = obj.MeritB;
-            //                    dgvrow.Cells[7].Value = obj.MeritC;
-            //                    dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
 
             #endregion
         }
@@ -403,25 +408,6 @@ WHERE
                 errorProvider3.SetError(textBoxX3, "輸入內容非數字!!");
             }
         }
-        // 事由
-        private void reasonTbx_TextChanged(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow row in dataGridViewX1.Rows)
-            {
-                if (!row.ReadOnly)
-                {
-                    string reason = "" + row.Cells[8].Value;
-
-                    int index = reason.LastIndexOf("]") + 1;
-                    int length = reason.Length;
-                    int removeCcount = length - index;
-                    //reason += reasonTbx.Text;
-
-                    row.Cells[8].Value = reason.Remove(index, removeCcount);
-                    row.Cells[8].Value += reasonTbx.Text;
-                }
-            }
-        }
 
         private bool intParse(string CellValue)
         {
@@ -475,7 +461,7 @@ WHERE
 
             foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
             {
-                if (!dgvrow.ReadOnly)
+                if (dgvrow.DefaultCellStyle.BackColor != Color.LightGray)
                 {
                     int a = "" + dgvrow.Cells[5].Value == "" ? 0 : int.Parse("" + dgvrow.Cells[5].Value);
                     int b = "" + dgvrow.Cells[6].Value == "" ? 0 : int.Parse("" + dgvrow.Cells[6].Value);
@@ -564,5 +550,54 @@ FROM
             }
         }
 
+        private void cbxReason_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            KeyValuePair<string, string> kvp = (KeyValuePair<string, string>)this.cbxReason.SelectedItem;
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                if (!row.ReadOnly)
+                {
+                    row.Cells[8].Value = kvp.Value;
+                }
+            }
+        }
+
+        private void cbxReason_TextChanged(object sender, EventArgs e)
+        {
+            string comText = this.cbxReason.Text;
+            comText = comText.Remove(0, comText.IndexOf('-') + 1);
+
+            string reasonValue = GetReason(comText);
+
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                if (!row.ReadOnly)
+                {
+                    row.Cells[8].Value = reasonValue;
+                }
+            }
+        }
+
+        private string GetReason(string comText)
+        {
+            string reasonValue = "";
+            List<string> list = new List<string>();
+            string[] reasonList = comText.Split(',');
+            foreach (string each in reasonList)
+            {
+                string each1 = each.Replace("\r\n", "");
+                if (this._dicReasonByKey.ContainsKey(each1))
+                {
+                    list.Add(this._dicReasonByKey[each1]);
+                }
+                else
+                {
+                    list.Add(each1);
+                }
+            }
+
+            reasonValue = string.Join(",", list);
+            return reasonValue;
+        }
     }
 }
