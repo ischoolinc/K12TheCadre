@@ -201,7 +201,7 @@ WHERE
                 //dgvrow.Cells[8].Value = "" + row["reason"];
                 dgvrow.Cells[8].Value = string.Format("[{0}][{1}]", row["referencetype"], row["cadrename"]);
 
-                dgvrow.Tag = "" + row["id"]; // StudentID
+                dgvrow.Tag = row; // row
 
                 if (!studentIDList.Contains("" + row["id"]))
                 {
@@ -241,7 +241,7 @@ WHERE
                 bool hadMeritRecord = false;
                 string cadreType = "" + dgvrow.Cells[3].Value;
                 string cadreName = "" + dgvrow.Cells[4].Value;
-                string studentID = "" + dgvrow.Tag;
+                string studentID = "" + ((DataRow)dgvrow.Tag)["id"];
 
                 if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
                 {
@@ -469,7 +469,7 @@ WHERE
 
                     if ((a + b + c) > 0)
                     {
-                        string studentID = "" + dgvrow.Tag;
+                        string studentID = "" + ((DataRow)dgvrow.Tag)["id"];
                         string reason = "" + dgvrow.Cells[8].Value;
                         string detail = string.Format("<Discipline><Merit A = \"{0}\" B = \"{1}\" C = \"{2}\"/></Discipline>", a, b, c);
 
@@ -553,11 +553,14 @@ FROM
         private void cbxReason_SelectedIndexChanged(object sender, EventArgs e)
         {
             KeyValuePair<string, string> kvp = (KeyValuePair<string, string>)this.cbxReason.SelectedItem;
-            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
             {
-                if (!row.ReadOnly)
+                if (!dgvrow.ReadOnly)
                 {
-                    row.Cells[8].Value = kvp.Value;
+                    // row.Cells[8].Value = kvp.Value;
+                    DataRow row = (DataRow)dgvrow.Tag;
+
+                    dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}",row["referencetype"],row["cadrename"], kvp.Value);
                 }
             }
         }
