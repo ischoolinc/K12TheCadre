@@ -199,7 +199,7 @@ WHERE
                 //dgvrow.Cells[index++].Value = "" + row["meritb"];
                 //dgvrow.Cells[index++].Value = "" + row["meritc"];
                 //dgvrow.Cells[8].Value = "" + row["reason"];
-                //dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", row["referencetype"], row["cadrename"], reasonTbx.Text);
+                dgvrow.Cells[8].Value = string.Format("[{0}][{1}]", row["referencetype"], row["cadrename"]);
 
                 dgvrow.Tag = "" + row["id"]; // StudentID
 
@@ -245,8 +245,8 @@ WHERE
 
                 if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
                 {
-                    //string reasonKey = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
-                    string reasonKey = "[幹部]";
+                    string reasonKey = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    //string reasonKey = "[幹部]";
                     List<string> listReason = dicMeritRecordByStudentIDByReason[studentID].Keys.ToList();
 
                     foreach (string reason in listReason)
@@ -276,7 +276,7 @@ WHERE
                         dgvrow.Cells[5].Value = obj.MeritA;
                         dgvrow.Cells[6].Value = obj.MeritB;
                         dgvrow.Cells[7].Value = obj.MeritC;
-                        dgvrow.Cells[8].Value = obj.Reason;
+                        dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}",cadreType, cadreName, obj.Reason);
                         dgvrow.ReadOnly = true;
                         dgvrow.DefaultCellStyle.BackColor = Color.LightGreen;
                         //dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
@@ -573,7 +573,13 @@ FROM
             {
                 if (!row.ReadOnly)
                 {
-                    row.Cells[8].Value = reasonValue;
+                    string reason = "" + row.Cells[8].Value;
+                    int index = reason.LastIndexOf("]") + 1;
+                    int length = reason.Length;
+                    int removeCcount = length - index;
+
+                    row.Cells[8].Value = reason.Remove(index, removeCcount);
+                    row.Cells[8].Value += reasonValue;
                 }
             }
         }
