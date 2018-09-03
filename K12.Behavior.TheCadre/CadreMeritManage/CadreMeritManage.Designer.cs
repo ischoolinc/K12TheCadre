@@ -32,6 +32,15 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupPanel1 = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.semesterCbx = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.schoolYearCbx = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -68,15 +77,6 @@
             this.errorProvider3 = new System.Windows.Forms.ErrorProvider(this.components);
             this.labelX11 = new DevComponents.DotNetBar.LabelX();
             this.cbxReason = new DevComponents.DotNetBar.Controls.ComboBoxEx();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.groupPanel1.SuspendLayout();
             this.groupPanel3.SuspendLayout();
@@ -120,6 +120,65 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(779, 404);
             this.dataGridViewX1.TabIndex = 0;
             this.dataGridViewX1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellEndEdit);
+            // 
+            // Column5
+            // 
+            this.Column5.Frozen = true;
+            this.Column5.HeaderText = "班級";
+            this.Column5.Name = "Column5";
+            this.Column5.Width = 70;
+            // 
+            // Column6
+            // 
+            this.Column6.Frozen = true;
+            this.Column6.HeaderText = "座號";
+            this.Column6.Name = "Column6";
+            this.Column6.Width = 57;
+            // 
+            // Column7
+            // 
+            this.Column7.Frozen = true;
+            this.Column7.HeaderText = "姓名";
+            this.Column7.Name = "Column7";
+            this.Column7.Width = 70;
+            // 
+            // Column1
+            // 
+            this.Column1.Frozen = true;
+            this.Column1.HeaderText = "幹部類別";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 85;
+            // 
+            // Column4
+            // 
+            this.Column4.Frozen = true;
+            this.Column4.HeaderText = "幹部名稱";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 85;
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "大功";
+            this.Column8.Name = "Column8";
+            this.Column8.Width = 57;
+            // 
+            // Column9
+            // 
+            this.Column9.HeaderText = "小功";
+            this.Column9.Name = "Column9";
+            this.Column9.Width = 57;
+            // 
+            // Column10
+            // 
+            this.Column10.HeaderText = "嘉獎";
+            this.Column10.Name = "Column10";
+            this.Column10.Width = 57;
+            // 
+            // Column11
+            // 
+            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column11.HeaderText = "事由";
+            this.Column11.Name = "Column11";
             // 
             // groupPanel1
             // 
@@ -622,65 +681,6 @@
             this.cbxReason.TabIndex = 16;
             this.cbxReason.SelectedIndexChanged += new System.EventHandler(this.cbxReason_SelectedIndexChanged);
             this.cbxReason.TextChanged += new System.EventHandler(this.cbxReason_TextChanged);
-            // 
-            // Column5
-            // 
-            this.Column5.Frozen = true;
-            this.Column5.HeaderText = "班級";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 70;
-            // 
-            // Column6
-            // 
-            this.Column6.Frozen = true;
-            this.Column6.HeaderText = "座號";
-            this.Column6.Name = "Column6";
-            this.Column6.Width = 57;
-            // 
-            // Column7
-            // 
-            this.Column7.Frozen = true;
-            this.Column7.HeaderText = "姓名";
-            this.Column7.Name = "Column7";
-            this.Column7.Width = 70;
-            // 
-            // Column1
-            // 
-            this.Column1.Frozen = true;
-            this.Column1.HeaderText = "幹部類別";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 85;
-            // 
-            // Column4
-            // 
-            this.Column4.Frozen = true;
-            this.Column4.HeaderText = "幹部名稱";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 85;
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "大功";
-            this.Column8.Name = "Column8";
-            this.Column8.Width = 57;
-            // 
-            // Column9
-            // 
-            this.Column9.HeaderText = "小功";
-            this.Column9.Name = "Column9";
-            this.Column9.Width = 57;
-            // 
-            // Column10
-            // 
-            this.Column10.HeaderText = "嘉獎";
-            this.Column10.Name = "Column10";
-            this.Column10.Width = 57;
-            // 
-            // Column11
-            // 
-            this.Column11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column11.HeaderText = "事由";
-            this.Column11.Name = "Column11";
             // 
             // CadreMeritManage
             // 

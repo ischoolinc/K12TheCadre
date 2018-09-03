@@ -59,6 +59,9 @@
             this.dataGridViewX1.AllowUserToAddRows = false;
             this.dataGridViewX1.AllowUserToDeleteRows = false;
             this.dataGridViewX1.AllowUserToResizeRows = false;
+            this.dataGridViewX1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewX1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewX1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -77,7 +80,7 @@
             this.dataGridViewX1.Location = new System.Drawing.Point(10, 41);
             this.dataGridViewX1.Name = "dataGridViewX1";
             this.dataGridViewX1.RowTemplate.Height = 24;
-            this.dataGridViewX1.Size = new System.Drawing.Size(350, 339);
+            this.dataGridViewX1.Size = new System.Drawing.Size(350, 347);
             this.dataGridViewX1.TabIndex = 0;
             this.dataGridViewX1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellEndEdit);
             // 
@@ -165,12 +168,14 @@
             this.checkBoxX1.TabIndex = 7;
             this.checkBoxX1.Text = "儲存完成後進行敘獎作業";
             this.checkBoxX1.TextColor = System.Drawing.Color.Red;
+            this.checkBoxX1.Visible = false;
             // 
             // linkLabel1
             // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(10, 402);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 402);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(86, 17);
             this.linkLabel1.TabIndex = 8;
@@ -280,11 +285,11 @@
             this.Controls.Add(this.intSemester);
             this.Controls.Add(this.intSchoolYear);
             this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.checkBoxX1);
             this.Controls.Add(this.lbSchoolYear);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.dataGridViewX1);
+            this.Controls.Add(this.checkBoxX1);
             this.DoubleBuffered = true;
             this.Name = "ClassSpeedInsertBySeanNo";
             this.Text = "班級幹部登錄";
