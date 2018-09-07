@@ -276,7 +276,16 @@ WHERE
                         dgvrow.Cells[5].Value = obj.MeritA;
                         dgvrow.Cells[6].Value = obj.MeritB;
                         dgvrow.Cells[7].Value = obj.MeritC;
-                        dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}",cadreType, cadreName, obj.Reason);
+                        if (obj.Reason.IndexOf("[幹部]") > -1)
+                        {
+                            string reason = obj.Reason.Remove(obj.Reason.IndexOf("[幹部]"),4);
+                            dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, reason);
+                        }
+                        else
+                        {
+                            dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
+                        }
+                        
                         dgvrow.ReadOnly = true;
                         dgvrow.DefaultCellStyle.BackColor = Color.LightGreen;
                         //dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
