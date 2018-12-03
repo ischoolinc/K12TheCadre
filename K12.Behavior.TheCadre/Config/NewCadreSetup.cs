@@ -17,12 +17,11 @@ using Campus.Windows;
 
 namespace K12.Behavior.TheCadre
 {
-    //幹部與敘獎 - 管理視窗
     public partial class NewCadreSetup : BaseForm
     {
-
         private ChangeListener DataListener { get; set; }
         private bool DataGridViewDataInChange = false; //資料是否更動檢查
+        public  bool DataChange = false;
 
         /// <summary>
         /// 獎勵事由代碼
@@ -158,13 +157,14 @@ namespace K12.Behavior.TheCadre
             {
                 accessHelper.DeletedValues(DeleteList.ToArray());
                 accessHelper.InsertValues(InsertList.ToArray());
+                DataGridViewDataInChange = false;
+                this.DataChange = true;
+                Campus.Windows.MsgBox.Show("儲存資料成功!!");
             }
             catch(Exception ex)
             {
                 Campus.Windows.MsgBox.Show("新增資料錯誤!!\n" + ex.Message);
             }
-            DataGridViewDataInChange = false;
-            Campus.Windows.MsgBox.Show("儲存資料成功!!");
         }
 
         /// <summary>
@@ -550,7 +550,14 @@ namespace K12.Behavior.TheCadre
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            (new frmDescription()).ShowDialog();
+            FISCA.Presentation.Controls.MsgBox.Show(@"     
+1.幹部清單可於匯出整理後匯入。
+
+2.幹部類型分為(班級幹部、社團幹部、學校幹部)。
+
+3.獎勵事由欄位可直接輸入獎勵事由代碼。
+
+4.排序是依幹部類型、排序數字進行排序。", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

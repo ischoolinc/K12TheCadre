@@ -11,27 +11,21 @@ using K12.Data;
 using System.Xml;
 using FISCA.DSAUtil;
 using FISCA.LogAgent;
+using FISCA.UDT;
 
 namespace K12.Behavior.TheCadre
 {
     public partial class SchoolSpeedInsertByClassSeanNo : BaseForm
     {
-        internal FISCA.UDT.AccessHelper _accessHelper = new FISCA.UDT.AccessHelper();
-
+        internal AccessHelper _accessHelper = new AccessHelper();
         internal GetAllStudent GetStudent { get; set; }
-
         internal SetDataGridViewRowState SetDataGrid = new SetDataGridViewRowState();
-
         internal BackgroundWorker BGW;
-
-        internal List<SchoolObject> CadreList { get; set; }
-
-        internal Dictionary<string, bool> CadreDic { get; set; }
-
-        internal List<CadreDataRowSchool> _RowList { get; set; }
-
-        private int DefSchoolYear { get; set; }
-        private int DefSemester { get; set; }
+        internal List<SchoolObject> _listCadre { get; set; }
+        internal Dictionary<string, bool> _dicCadre { get; set; }
+        internal List<CadreDataRowSchool> _listRow { get; set; }
+        //private int DefSchoolYear { get; set; }
+        //private int DefSemester { get; set; }
 
         public SchoolSpeedInsertByClassSeanNo()
         {
@@ -45,7 +39,6 @@ namespace K12.Behavior.TheCadre
             BGW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BGW_RunWorkerCompleted);
 
             //學年期
-            //lbHelper.Text = "學年度「" + School.DefaultSchoolYear + "」學期「" + School.DefaultSemester + "」學校幹部登錄。";
             intSchoolYear.Value = int.Parse(School.DefaultSchoolYear);
             intSemester.Value = int.Parse(School.DefaultSemester);
             this.Text = "學校幹部登錄(全校資料讀取中...)";
@@ -64,8 +57,8 @@ namespace K12.Behavior.TheCadre
                 this.intSchoolYear.ValueChanged -= new System.EventHandler(this.intSchoolYear_ValueChanged);
                 this.intSemester.ValueChanged -= new System.EventHandler(this.intSemester_ValueChanged);
 
-                DefSchoolYear = intSchoolYear.Value;
-                DefSemester = intSemester.Value;
+                //DefSchoolYear = intSchoolYear.Value;
+                //DefSemester = intSemester.Value;
 
                 BGW.RunWorkerAsync();
             }
@@ -101,7 +94,7 @@ namespace K12.Behavior.TheCadre
         private void GetStudentAndCadre()
         {
             //取得本學期所有學校幹部
-            CadreList = _accessHelper.Select<SchoolObject>(string.Format("SchoolYear = '{0}' and Semester = '{1}' and ReferenceType = '{2}'", DefSchoolYear, DefSemester, "學校幹部"));
+            _listCadre = _accessHelper.Select<SchoolObject>(string.Format("SchoolYear = '{0}' and Semester = '{1}' and ReferenceType = '{2}'", intSchoolYear.Value, intSemester.Value, "學校幹部"));
 
             SetObj();
 
@@ -156,12 +149,12 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void SetObj()
         {
-            CadreDic = new Dictionary<string, bool>();
-            foreach (SchoolObject each in CadreList)
+            _dicCadre = new Dictionary<string, bool>();
+            foreach (SchoolObject each in _listCadre)
             {
-                if (!CadreDic.ContainsKey(each.UID))
+                if (!_dicCadre.ContainsKey(each.UID))
                 {
-                    CadreDic.Add(each.UID, false);
+                    _dicCadre.Add(each.UID, false);
                 }
             }
         }
@@ -187,7 +180,7 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private SchoolObject Getobj(string CadreName)
         {
-            foreach (SchoolObject each in CadreList)
+            foreach (SchoolObject each in _listCadre)
             {
                 //判斷null,是為了確認學生來自有班座之學生
                 Srecord sr = GetStudent.GetSrecord(each.StudentID);
@@ -195,9 +188,9 @@ namespace K12.Behavior.TheCadre
                 {
                     //1.名稱相同
                     //2.字典內是false
-                    if (CadreName == each.CadreName && !CadreDic[each.UID])
+                    if (CadreName == each.CadreName && !_dicCadre[each.UID])
                     {
-                        CadreDic[each.UID] = true;
+                        _dicCadre[each.UID] = true;
                         return each;
                     }
                 }
@@ -211,7 +204,7 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void ChangeForm()
         {
-            _RowList = new List<CadreDataRowSchool>();
+            _listRow = new List<CadreDataRowSchool>();
 
             //取得學校幹部類型
             List<ClassCadreNameObj> SchoolCadreNameList = _accessHelper.Select<ClassCadreNameObj>(string.Format("NameType = '{0}'", "學校幹部"));
@@ -236,27 +229,27 @@ namespace K12.Behavior.TheCadre
 
                             if (student != null) //如果為null表示學生無座號,或是無班級,或是狀態不是一般生
                             {
-                                CadreDataRowSchool cdr = new CadreDataRowSchool(student, obj, each.Index, this, DefSchoolYear, DefSemester);
-                                _RowList.Add(cdr);
+                                CadreDataRowSchool cdr = new CadreDataRowSchool(student, obj, each.Index, this, intSchoolYear.Value, intSemester.Value);
+                                _listRow.Add(cdr);
                             }
                             else
                             {
-                                CadreDataRowSchool cdr = new CadreDataRowSchool(each.CadreName, each.Index, this, DefSchoolYear, DefSemester);
-                                _RowList.Add(cdr);
+                                CadreDataRowSchool cdr = new CadreDataRowSchool(each.CadreName, each.Index, this, intSchoolYear.Value, intSemester.Value);
+                                _listRow.Add(cdr);
                             }
                         }
                         else
                         {
-                            CadreDataRowSchool cdr = new CadreDataRowSchool(each.CadreName, each.Index, this, DefSchoolYear, DefSemester);
-                            _RowList.Add(cdr);
+                            CadreDataRowSchool cdr = new CadreDataRowSchool(each.CadreName, each.Index, this, intSchoolYear.Value, intSemester.Value);
+                            _listRow.Add(cdr);
                         }
                     }
                 }
 
                 //排序
-                _RowList.Sort(SortRow);
+                _listRow.Sort(SortRow);
 
-                dataGridViewX1.DataSource = new BindingList<CadreDataRowSchool>(_RowList);
+                dataGridViewX1.DataSource = new BindingList<CadreDataRowSchool>(_listRow);
             }
             else
             {
@@ -327,11 +320,10 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            DefSchoolYear = intSchoolYear.Value;
-            DefSemester = intSemester.Value;
             //鎖定儲存時畫面
             SetObjType = false;
 
+            #region 資料整理
             List<SchoolObject> InsertList = new List<SchoolObject>();
             List<SchoolObject> DeleteList = new List<SchoolObject>();
             List<SchoolObject> DefList = new List<SchoolObject>();
@@ -340,7 +332,7 @@ namespace K12.Behavior.TheCadre
             List<CadreDataRowSchool> delete = new List<CadreDataRowSchool>();
             List<CadreDataRowSchool> Def = new List<CadreDataRowSchool>();
 
-            foreach (CadreDataRowSchool data in _RowList)
+            foreach (CadreDataRowSchool data in _listRow)
             {
                 //Record不是null,但是沒有UID就是新增資料
                 if (data._CadreRecord != null && data._CadreRecord.UID == "")
@@ -364,14 +356,12 @@ namespace K12.Behavior.TheCadre
             foreach (CadreDataRowSchool data in Def)
             {
                 DefList.Add(data._CadreRecord);
-            }
+            } 
+            #endregion
 
-            ////取得所有目前學校幹部資料
-            //List<SchoolObject> DeleteList = _accessHelper.Select<SchoolObject>(string.Format("SchoolYear = '{0}' and Semester = '{1}' and ReferenceType = '{2}'", School.DefaultSchoolYear, School.DefaultSemester, "學校幹部"));
-            ////新增資料清單
-            //List<SchoolObject> InsertList = new List<SchoolObject>();
+            #region Log
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("學年度「" + DefSchoolYear + "」學期「" + DefSemester + "」");
+            sb.AppendLine("學年度「" + intSchoolYear.Value + "」學期「" + intSemester.Value + "」");
 
             if (insert.Count != 0)
             {
@@ -397,12 +387,14 @@ namespace K12.Behavior.TheCadre
                     sb.AppendLine("學生「" + sr.Name + "」擔任「學校幹部」幹部名稱「" + data._CadreName + "」已被刪除");
                 }
             }
+            #endregion
 
-            List<string> CadreIDList = new List<string>();
+            #region 資料儲存至資料庫
+            List<string> listCadreID = new List<string>();
             try
             {
-                CadreIDList = _accessHelper.InsertValues(InsertList.ToArray());
-                _accessHelper.DeletedValues(DeleteList.ToArray());
+                listCadreID = this._accessHelper.InsertValues(InsertList.ToArray());
+                this._accessHelper.DeletedValues(DeleteList.ToArray());
             }
             catch
             {
@@ -418,38 +410,44 @@ namespace K12.Behavior.TheCadre
             else
             {
                 MsgBox.Show("未修改資料!!");
-            }
+            } 
+            #endregion
 
             //敘獎模式
             if (checkBoxX1.Checked)
             {
-                List<SchoolObject> list = new List<SchoolObject>();
+                #region 開啟「敘獎作業」功能畫面
 
-                if (CadreIDList.Count != 0)
-                {
-                    String sb123 = string.Join(",", CadreIDList.ToArray());
-                    list = _accessHelper.Select<SchoolObject>(string.Format("UID in (" + sb123 + ")"));
-                }
+                (new CadreMeritManage.CadreMeritManage(intSchoolYear.Value,intSemester.Value,CadreType.SchoolCadre)).ShowDialog();
 
-                list.AddRange(DefList);
+                // 舊 幹部敘獎功能畫面
+                //List<SchoolObject> list = new List<SchoolObject>();
 
-                if (list.Count != 0)
-                {
-                    //進行敘獎操作
-                    //ps:絮獎模式有兩種
-                    //1.將學生基本資料導入獎勵功能
-                    //2.透過設定值,以幹部為基準進行絮獎(較方便) <--
-                    MutiMeritDemerit mmd = new MutiMeritDemerit("獎勵", list, "學校幹部", DefSchoolYear, DefSemester);
-                    mmd.ShowDialog();
-                }
-                else
-                {
-                    MsgBox.Show("因無學生擔任幹部\n敘獎畫面將不會開啟!!");
-                }
+                //if (CadreIDList.Count != 0)
+                //{
+                //    String sb123 = string.Join(",", CadreIDList.ToArray());
+                //    list = _accessHelper.Select<SchoolObject>(string.Format("UID in (" + sb123 + ")"));
+                //}
+
+                //list.AddRange(DefList);
+
+                //if (list.Count != 0)
+                //{
+                //    //進行敘獎操作
+                //    //ps:絮獎模式有兩種
+                //    //1.將學生基本資料導入獎勵功能
+                //    //2.透過設定值,以幹部為基準進行絮獎(較方便) <--
+                //    MutiMeritDemerit mmd = new MutiMeritDemerit("獎勵", list, "學校幹部", intSchoolYear.Value, intSemester.Value);
+                //    mmd.ShowDialog();
+                //}
+                //else
+                //{
+                //    MsgBox.Show("因無學生擔任幹部\n敘獎畫面將不會開啟!!");
+                //} 
+                #endregion
             }
 
             Reset();
-
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

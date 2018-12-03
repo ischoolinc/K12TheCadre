@@ -209,7 +209,6 @@ namespace K12.Behavior.TheCadre
             #endregion
 
             #region 幹部敘獎
-            // 2018/04/16 羿均 優化項目
             FISCA.Features.Register(URL幹部敘獎作業 , arg  =>
             {
                 (new CadreMeritManage.CadreMeritManage()).ShowDialog();

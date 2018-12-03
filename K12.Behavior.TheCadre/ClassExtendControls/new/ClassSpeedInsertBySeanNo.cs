@@ -12,6 +12,7 @@ using System.Xml;
 using FISCA.DSAUtil;
 using FISCA.LogAgent;
 using FISCA.Data;
+using FISCA.UDT;
 
 namespace K12.Behavior.TheCadre
 {
@@ -24,7 +25,7 @@ namespace K12.Behavior.TheCadre
 
         //row.Tag = 學生
         //row.cell[0].Tag = 學生班級幹部記錄
-        internal FISCA.UDT.AccessHelper _accessHelper = new FISCA.UDT.AccessHelper();
+        internal AccessHelper _accessHelper = new AccessHelper();
 
         /// <summary>
         /// 座號對照字典
@@ -49,8 +50,8 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         internal ClassRecord _classRecord;
 
-        private int DefSchoolYear { get; set; }
-        private int DefSemester { get; set; }
+        //private int DefSchoolYear { get; set; }
+        //private int DefSemester { get; set; }
 
         public ClassSpeedInsertBySeanNo()
         {
@@ -80,8 +81,8 @@ namespace K12.Behavior.TheCadre
                 this.intSchoolYear.ValueChanged -= new System.EventHandler(this.intSchoolYear_ValueChanged);
                 this.intSemester.ValueChanged -= new System.EventHandler(this.intSemester_ValueChanged);
 
-                DefSchoolYear = intSchoolYear.Value;
-                DefSemester = intSemester.Value;
+                //DefSchoolYear = intSchoolYear.Value;
+                //DefSemester = intSemester.Value;
 
                 BGW.RunWorkerAsync();
             }
@@ -149,7 +150,7 @@ namespace K12.Behavior.TheCadre
 
             #region 取得本學期所有班級幹部,篩選出本班之幹部清單(CadreList)
             CadreList = new List<SchoolObject>();
-            List<SchoolObject> CadreList1 = _accessHelper.Select<SchoolObject>(string.Format("SchoolYear = '{0}' and Semester = '{1}' and ReferenceType = '{2}'", DefSchoolYear.ToString(), DefSemester.ToString(), "班級幹部"));
+            List<SchoolObject> CadreList1 = _accessHelper.Select<SchoolObject>(string.Format("SchoolYear = '{0}' and Semester = '{1}' and ReferenceType = '{2}'", intSchoolYear.Value, intSemester.Value, "班級幹部"));
             foreach (SchoolObject each in CadreList1)
             {
                 if (!StudentIdList.Contains(each.StudentID))
@@ -204,12 +205,12 @@ namespace K12.Behavior.TheCadre
                         {
                             StudentRecord student = Student.SelectByID(obj.StudentID);
 
-                            CadreDataRow cdr = new CadreDataRow(student, obj, each.Index, this, DefSchoolYear, DefSemester);
+                            CadreDataRow cdr = new CadreDataRow(student, obj, each.Index, this, intSchoolYear.Value, intSemester.Value);
                             _RowList.Add(cdr);
                         }
                         else
                         {
-                            CadreDataRow cdr = new CadreDataRow(each.CadreName, each.Index, this, DefSchoolYear, DefSemester);
+                            CadreDataRow cdr = new CadreDataRow(each.CadreName, each.Index, this, intSchoolYear.Value, intSemester.Value);
                             _RowList.Add(cdr);
                         }
                     }
@@ -275,15 +276,13 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            DefSchoolYear = intSchoolYear.Value;
-            DefSemester = intSemester.Value;
-
             //畫面設定為鎖定
             SetObjType = false;
 
-            List<SchoolObject> InsertList = new List<SchoolObject>();
-            List<SchoolObject> DeleteList = new List<SchoolObject>();
-            List<SchoolObject> DefList = new List<SchoolObject>();
+            #region 資料整理
+            List<SchoolObject> listInsert = new List<SchoolObject>();
+            List<SchoolObject> listDelete = new List<SchoolObject>();
+            List<SchoolObject> listDef = new List<SchoolObject>();
 
             List<CadreDataRow> insert = new List<CadreDataRow>();
             List<CadreDataRow> delete = new List<CadreDataRow>();
@@ -309,12 +308,13 @@ namespace K12.Behavior.TheCadre
 
             foreach (CadreDataRow data in Def)
             {
-                DefList.Add(data._CadreRecord);
-            }
+                listDef.Add(data._CadreRecord);
+            } 
+            #endregion
 
-            //Log
+            #region Log
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("學年度「" + DefSchoolYear + "」學期「" + DefSemester + "」");
+            sb.AppendLine("學年度「" + intSchoolYear.Value + "」學期「" + intSemester.Value + "」");
 
             if (insert.Count != 0)
             {
@@ -323,7 +323,7 @@ namespace K12.Behavior.TheCadre
                 foreach (CadreDataRow data in insert)
                 {
                     //新增
-                    InsertList.Add(data._CadreRecord);
+                    listInsert.Add(data._CadreRecord);
 
                     sb.AppendLine("學生「" + data._StudentRecord.Name + "」擔任「班級幹部」幹部名稱「" + data._CadreName + "」已新增");
 
@@ -336,7 +336,7 @@ namespace K12.Behavior.TheCadre
 
                 foreach (CadreDataRow data in delete)
                 {
-                    DeleteList.Add(data._CadreRecordDel);
+                    listDelete.Add(data._CadreRecordDel);
 
                     if (data._StudentRecord == null) //如果是學生完全清空
                     {
@@ -350,12 +350,14 @@ namespace K12.Behavior.TheCadre
                 }
 
             }
+            #endregion
 
-            List<string> CadreIDList = new List<string>();
+            #region 資料儲存至資料庫
+            List<string> listCadreID = new List<string>();
             try
             {
-                CadreIDList = _accessHelper.InsertValues(InsertList.ToArray());
-                _accessHelper.DeletedValues(DeleteList.ToArray());
+                listCadreID = this._accessHelper.InsertValues(listInsert.ToArray());
+                this._accessHelper.DeletedValues(listDelete.ToArray());
             }
             catch
             {
@@ -363,7 +365,7 @@ namespace K12.Behavior.TheCadre
                 SetObjType = true;
                 return;
             }
-            if (InsertList.Count + DeleteList.Count > 0)
+            if (listInsert.Count + listDelete.Count > 0)
             {
                 ApplicationLog.Log("幹部外掛模組", "班級幹部登錄", "class", _classRecord.ID, sb.ToString());
                 MsgBox.Show("幹部記錄,儲存成功!!");
@@ -371,36 +373,43 @@ namespace K12.Behavior.TheCadre
             else
             {
                 MsgBox.Show("未修改資料!!");
-            }
+            } 
+            #endregion
 
             SetObjType = true;
 
             //如果勾選登錄幹部敘獎
             if (checkBoxX1.Checked)
             {
-                List<SchoolObject> list = new List<SchoolObject>();
+                #region 開啟「幹部敘獎作業」
 
-                if (CadreIDList.Count != 0)
-                {
-                    String sb123 = string.Join(",", CadreIDList.ToArray());
-                    list = _accessHelper.Select<SchoolObject>(string.Format("UID in (" + sb123 + ")"));
-                }
+                (new CadreMeritManage.CadreMeritManage(intSchoolYear.Value,intSemester.Value, CadreType.ClassCadre)).ShowDialog();
 
-                list.AddRange(DefList);
+                // 舊-幹部敘獎作業
+                //List<SchoolObject> list = new List<SchoolObject>();
 
-                if (list.Count != 0)
-                {
-                    //進行敘獎操作
-                    //ps:絮獎模式有兩種
-                    //1.將學生基本資料導入獎勵功能
-                    //2.透過設定值,以幹部為基準進行絮獎(較方便) <--
-                    MutiMeritDemerit mmd = new MutiMeritDemerit("獎勵", list, "班級幹部", DefSchoolYear, DefSemester);
-                    mmd.ShowDialog();
-                }
-                else
-                {
-                    MsgBox.Show("因無學生擔任幹部\n敘獎畫面將不會開啟!!");
-                }
+                //if (listCadreID.Count != 0)
+                //{
+                //    String sb123 = string.Join(",", listCadreID.ToArray());
+                //    list = _accessHelper.Select<SchoolObject>(string.Format("UID in (" + sb123 + ")"));
+                //}
+
+                //list.AddRange(listDef);
+
+                //if (list.Count != 0)
+                //{
+                //    //進行敘獎操作
+                //    //ps:絮獎模式有兩種
+                //    //1.將學生基本資料導入獎勵功能
+                //    //2.透過設定值,以幹部為基準進行絮獎(較方便) <--
+                //    MutiMeritDemerit mmd = new MutiMeritDemerit("獎勵", list, "班級幹部", intSchoolYear.Value, intSemester.Value);
+                //    mmd.ShowDialog();
+                //}
+                //else
+                //{
+                //    MsgBox.Show("因無學生擔任幹部\n敘獎畫面將不會開啟!!");
+                //} 
+                #endregion
             }
 
             Reset();
