@@ -23,6 +23,7 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
         private int _schoolYear = int.Parse(School.DefaultSchoolYear);
         private int _semester = int.Parse(School.DefaultSemester);
         private bool _initFinish = false;
+        private string _classID;
         private AccessHelper _access = new AccessHelper();
         private QueryHelper _qh = new QueryHelper();
         private UpdateHelper _up = new UpdateHelper();
@@ -39,6 +40,15 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
             this._cadreType = type;
             this._schoolYear = schoolYear;
             this._semester = semester;
+        }
+
+        public CadreMeritManage(int schoolYear, int semester, CadreType type,string classID)
+        {
+            InitializeComponent();
+            this._cadreType = type;
+            this._schoolYear = schoolYear;
+            this._semester = semester;
+            this._classID = classID;
         }
 
         private void CadreMeritManage_Load(object sender, EventArgs e)
@@ -199,6 +209,10 @@ WHERE
             if (cbxCadreName.Text != "--全部--")
             {
                 condition += string.Format("AND cadre.cadrename = '{0}'", cbxCadreName.Text);
+            }
+            if (!string.IsNullOrEmpty(this._classID))
+            {
+                condition += string.Format("AND class.id = {0}", this._classID);
             }
             string sql = string.Format(@"
 SELECT 

@@ -383,7 +383,7 @@ namespace K12.Behavior.TheCadre
             {
                 #region 開啟「幹部敘獎作業」
 
-                (new CadreMeritManage.CadreMeritManage(intSchoolYear.Value,intSemester.Value, CadreType.ClassCadre)).ShowDialog();
+                (new CadreMeritManage.CadreMeritManage(intSchoolYear.Value,intSemester.Value, CadreType.ClassCadre, K12.Presentation.NLDPanels.Class.SelectedSource[0])).ShowDialog();
 
                 // 舊-幹部敘獎作業
                 //List<SchoolObject> list = new List<SchoolObject>();
