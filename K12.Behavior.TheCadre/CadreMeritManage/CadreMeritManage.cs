@@ -34,7 +34,7 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
             InitializeComponent();
         }
 
-        public CadreMeritManage(int schoolYear,int semester,CadreType type)
+        public CadreMeritManage(int schoolYear, int semester, CadreType type)
         {
             InitializeComponent();
             this._cadreType = type;
@@ -42,7 +42,7 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
             this._semester = semester;
         }
 
-        public CadreMeritManage(int schoolYear, int semester, CadreType type,string classID)
+        public CadreMeritManage(int schoolYear, int semester, CadreType type, string classID)
         {
             InitializeComponent();
             this._cadreType = type;
@@ -153,7 +153,7 @@ WHERE
                         {
                             _dicReasonByKey.Add(element.GetAttribute("Code"), v);
                         }
-                        
+
                         this.cbxReason.Items.Add(kvp);
                     }
                 }
@@ -239,7 +239,7 @@ FROM
 			AND cadretype.cadrename = cadre.cadrename
 WHERE
     {0}
-                ", condition); 
+                ", condition);
             #endregion
 
             DataTable dt = this._qh.Select(sql);
@@ -262,7 +262,7 @@ WHERE
                     //dgvrow.Cells[index++].Value = "" + row["meritb"];
                     //dgvrow.Cells[index++].Value = "" + row["meritc"];
                     //dgvrow.Cells[8].Value = "" + row["reason"];
-                    dgvrow.Cells[8].Value = string.Format("[{0}][{1}]", row["referencetype"], row["cadrename"]);
+                    dgvrow.Cells[8].Value = string.Format("({0})({1})", row["referencetype"], row["cadrename"]);
 
                     dgvrow.Tag = row; // row
 
@@ -273,7 +273,7 @@ WHERE
                     listStudentID.Add("" + row["id"]);
 
                     dataGridViewX1.Rows.Add(dgvrow);
-                } 
+                }
                 #endregion
             }
 
@@ -312,7 +312,7 @@ WHERE
 
                 if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
                 {
-                    string reasonKey = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    string reasonKey = string.Format("({0})({1})", cadreType, cadreName);
                     List<string> listReason = dicMeritRecordByStudentIDByReason[studentID].Keys.ToList();
 
                     foreach (string reason in listReason)
@@ -337,11 +337,11 @@ WHERE
                             else
                             {
                                 dgvrow.Visible = cbxMerit.SelectedItem.ToString() == "已敘獎" ? true : false;
-                            } 
+                            }
                             #endregion
 
                             hadMeritRecord = true;
-                        } 
+                        }
                         #endregion
                     }
                 }
@@ -360,11 +360,11 @@ WHERE
                         if (obj.Reason.IndexOf("[幹部]") > -1)
                         {
                             string reason = obj.Reason.Remove(obj.Reason.IndexOf("[幹部]"), 4);
-                            dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, reason);
+                            dgvrow.Cells[8].Value = string.Format("[幹部]({0})({1}){2}", cadreType, cadreName, reason);
                         }
                         else
                         {
-                            dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
+                            dgvrow.Cells[8].Value = string.Format("({0})({1}){2}", cadreType, cadreName, obj.Reason);
                         }
 
                         //dgvrow.Cells[8].ReadOnly = true;
@@ -378,7 +378,7 @@ WHERE
                         else
                         {
                             dgvrow.Visible = cbxMerit.SelectedItem.ToString() == "未敘獎" ? true : false;
-                        } 
+                        }
                         #endregion
 
                     }
@@ -396,11 +396,11 @@ WHERE
                         else
                         {
                             dgvrow.Visible = cbxMerit.SelectedItem.ToString() == "未敘獎" ? true : false;
-                        } 
+                        }
                         #endregion
 
                     }
-                } 
+                }
                 #endregion
 
             }
@@ -587,9 +587,18 @@ WHERE
                 {
                     if (!dgvrow.ReadOnly)
                     {
-                        //row.Cells[8].Value = kvp.Value;
                         DataRow row = (DataRow)dgvrow.Tag;
-                        dgvrow.Cells[col].Value = string.Format("[{0}][{1}]{2}", row["referencetype"], row["cadrename"], kvp.Value);
+                        string value = kvp.Value;
+                        if (value.IndexOf("[幹部]") > -1)
+                        {
+                            int index = value.IndexOf("[幹部]");
+                            string reason = value.Remove(value.IndexOf("[幹部]"), 4);
+                            dgvrow.Cells[col].Value = string.Format("[幹部]({0})({1}){2}", row["referencetype"], row["cadrename"], reason);
+                        }
+                        else
+                        {
+                            dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], kvp.Value);
+                        }
                     }
                 }
             }
@@ -600,47 +609,53 @@ WHERE
             if (this._initFinish)
             {
                 int col = 8;
-                string comText = this.cbxReason.Text;
-                comText = comText.Remove(0, comText.IndexOf('-') + 1);
+                string comText = this.cbxReason.Text.Trim();
+                int index = comText.IndexOf('-');
 
-                string reasonValue = GetReason(comText);
-
-                foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                if (index > -1)
                 {
-                    if (!row.ReadOnly)
+                    string value = "";
+                    string code = comText.Remove(index);
+                    
+                    if (this._dicReasonByKey.ContainsKey(code))
                     {
-                        string reason = "" + row.Cells[col].Value;
-                        int index = reason.LastIndexOf("]") + 1;
-                        int length = reason.Length;
-                        int removeCcount = length - index;
-
-                        row.Cells[col].Value = reason.Remove(index, removeCcount);
-                        row.Cells[col].Value += reasonValue;
+                        value = this._dicReasonByKey[code];
                     }
-                }
-            }
-        }
 
-        private string GetReason(string comText)
-        {
-            string reasonValue = "";
-            List<string> list = new List<string>();
-            string[] reasonList = comText.Split(',');
-            foreach (string each in reasonList)
-            {
-                string each1 = each.Replace("\r\n", "");
-                if (this._dicReasonByKey.ContainsKey(each1))
-                {
-                    list.Add(this._dicReasonByKey[each1]);
+                    foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                    {
+                        if (!row.ReadOnly)
+                        {
+                            string reason = "" + row.Cells[col].Value;
+
+                            string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
+                            // 如果事由中有[幹部]將移到事由內容最前面
+                            int _index = value.IndexOf("[幹部]");
+                            if (_index > -1)
+                            {
+                                value = value.Remove(_index, 4);
+                                row.Cells[col].Value = string.Format("[幹部]{0}{1}", defaultValue, value);
+                            }
+                            else
+                            {
+                                row.Cells[col].Value = string.Format("[幹部]{0}{1}", defaultValue, value);
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    list.Add(each1);
+                    foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                    {
+                        if (!row.ReadOnly)
+                        {
+                            string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
+
+                            row.Cells[col].Value = defaultValue + comText;
+                        }
+                    }
                 }
             }
-
-            reasonValue = string.Join(",", list);
-            return reasonValue;
         }
 
         private void dataGridViewX1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -656,7 +671,7 @@ WHERE
                     string cadreType = "" + dataGridViewX1.Rows[e.RowIndex].Cells[3].Value;
                     string cadreName = "" + dataGridViewX1.Rows[e.RowIndex].Cells[4].Value;
                     string key = string.Format("{0}_{1}", cadreType, cadreName);
-                    string defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    string defaultValue = string.Format("({0})({1})", cadreType, cadreName);
 
                     #region default value
                     //if (this._dicCadreNameObByKey.ContainsKey(key))
@@ -664,16 +679,16 @@ WHERE
                     //    ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
                     //    if (obj.Reason.IndexOf("[幹部]") > -1)
                     //    {
-                    //        defaultValue = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
+                    //        defaultValue = string.Format("[幹部]({0})({1})", cadreType, cadreName);
                     //    }
                     //    else
                     //    {
-                    //        defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    //        defaultValue = string.Format("({0})({1})", cadreType, cadreName);
                     //    }
                     //}
                     //else
                     //{
-                    //    defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    //    defaultValue = string.Format("({0})({1})", cadreType, cadreName);
                     //}
                     #endregion
 
@@ -685,20 +700,6 @@ WHERE
                     {
                         dataGridViewX1.Rows[e.RowIndex].Cells[col].Value = defaultValue;
                     }
-
-                    //if (changeValue.Length < defaultValue.Length)
-                    //{
-                    //    dataGridViewX1.Rows[e.RowIndex].Cells[col].Value = defaultValue;
-                    //}
-                    //else if (changeValue.Length == defaultValue.Length)
-                    //{
-                    //    return;
-                    //}
-                    //else
-                    //{
-                    //    char lastChar = (changeValue.ToCharArray()).Last();
-                    //    dataGridViewX1.Rows[e.RowIndex].Cells[col].Value = defaultValue + lastChar;
-                    //}
                 }
             }
         }
@@ -714,7 +715,7 @@ WHERE
 3.白色資料行代表幹部紀錄尚未登錄敘獎並未受幹部名稱管理。
 
 4.事由欄位【幹部類別】【幹部名稱】為識別幹部紀錄與獎勵
-　紀錄關聯的條件。 ", "說明",MessageBoxButtons.OK,MessageBoxIcon.Information);
+　紀錄關聯的條件。 ", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void linkManageCadreName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -748,7 +749,7 @@ WHERE
                 {
                     if (!string.IsNullOrEmpty(dgvrow.Cells[i].ErrorText))
                     {
-                        MsgBox.Show(string.Format("資料驗證錯誤:{0}",dgvrow.Cells[i].ErrorText));
+                        MsgBox.Show(string.Format("資料驗證錯誤:{0}", dgvrow.Cells[i].ErrorText));
                         return;
                     }
                 }
@@ -786,7 +787,7 @@ SELECT
                         dataRow.Add(data);
                     }
                 }
-            } 
+            }
             #endregion
 
 
@@ -827,11 +828,11 @@ FROM
                     MessageBox.Show("獎勵登錄完成");
                     ReloadDataGridView();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    MsgBox.Show(string.Format("獎勵登入失敗:{0}",ex.Message));
+                    MsgBox.Show(string.Format("獎勵登入失敗:{0}", ex.Message));
                 }
-                
+
             }
             else
             {
