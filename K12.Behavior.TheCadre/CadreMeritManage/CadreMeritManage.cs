@@ -167,7 +167,7 @@ WHERE
 
             ReloadDataGridView();
 
-            _initFinish = true;
+            //this._initFinish = true;
         }
 
         private void ReloadDicCadreNameOb()
@@ -190,6 +190,8 @@ WHERE
 
         private void ReloadDataGridView()
         {
+            this._initFinish = false;
+
             dataGridViewX1.Rows.Clear();
             List<string> listStudentID = new List<string>();
 
@@ -401,10 +403,12 @@ WHERE
                 } 
                 #endregion
 
-            } 
+            }
             #endregion
 
             #endregion
+
+            this._initFinish = true;
         }
 
         private void ReloadCadreNameCbx()
@@ -652,25 +656,25 @@ WHERE
                     string cadreType = "" + dataGridViewX1.Rows[e.RowIndex].Cells[3].Value;
                     string cadreName = "" + dataGridViewX1.Rows[e.RowIndex].Cells[4].Value;
                     string key = string.Format("{0}_{1}", cadreType, cadreName);
-                    string defaultValue = "";
+                    string defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
 
                     #region default value
-                    if (this._dicCadreNameObByKey.ContainsKey(key))
-                    {
-                        ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
-                        if (obj.Reason.IndexOf("[幹部]") > -1)
-                        {
-                            defaultValue = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
-                        }
-                        else
-                        {
-                            defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
-                        }
-                    }
-                    else
-                    {
-                        defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
-                    }
+                    //if (this._dicCadreNameObByKey.ContainsKey(key))
+                    //{
+                    //    ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
+                    //    if (obj.Reason.IndexOf("[幹部]") > -1)
+                    //    {
+                    //        defaultValue = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
+                    //    }
+                    //    else
+                    //    {
+                    //        defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
+                    //}
                     #endregion
 
                     if (changeValue.IndexOf(defaultValue) > -1)
