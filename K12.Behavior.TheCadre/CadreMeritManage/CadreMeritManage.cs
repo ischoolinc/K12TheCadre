@@ -262,7 +262,7 @@ WHERE
                     //dgvrow.Cells[index++].Value = "" + row["meritb"];
                     //dgvrow.Cells[index++].Value = "" + row["meritc"];
                     //dgvrow.Cells[8].Value = "" + row["reason"];
-                    dgvrow.Cells[8].Value = string.Format("({0})({1})", row["referencetype"], row["cadrename"]);
+                    dgvrow.Cells[8].Value = string.Format("[{0}][{1}]", row["referencetype"], row["cadrename"]);
 
                     dgvrow.Tag = row; // row
 
@@ -312,7 +312,7 @@ WHERE
 
                 if (dicMeritRecordByStudentIDByReason.ContainsKey(studentID))
                 {
-                    string reasonKey = string.Format("({0})({1})", cadreType, cadreName);
+                    string reasonKey = string.Format("[{0}][{1}]", cadreType, cadreName);
                     List<string> listReason = dicMeritRecordByStudentIDByReason[studentID].Keys.ToList();
 
                     foreach (string reason in listReason)
@@ -360,11 +360,11 @@ WHERE
                         if (obj.Reason.IndexOf("[幹部]") > -1)
                         {
                             string reason = obj.Reason.Remove(obj.Reason.IndexOf("[幹部]"), 4);
-                            dgvrow.Cells[8].Value = string.Format("[幹部]({0})({1}){2}", cadreType, cadreName, reason);
+                            dgvrow.Cells[8].Value = string.Format("[幹部][{0}][{1}]{2}", cadreType, cadreName, reason);
                         }
                         else
                         {
-                            dgvrow.Cells[8].Value = string.Format("({0})({1}){2}", cadreType, cadreName, obj.Reason);
+                            dgvrow.Cells[8].Value = string.Format("[{0}][{1}]{2}", cadreType, cadreName, obj.Reason);
                         }
 
                         //dgvrow.Cells[8].ReadOnly = true;
@@ -595,11 +595,11 @@ WHERE
                             {
                                 int index = value.IndexOf("[幹部]");
                                 string reason = value.Remove(value.IndexOf("[幹部]"), 4);
-                                dgvrow.Cells[col].Value = string.Format("[幹部]({0})({1}){2}", row["referencetype"], row["cadrename"], reason);
+                                dgvrow.Cells[col].Value = string.Format("[幹部][{0}][{1}]{2}", row["referencetype"], row["cadrename"], reason);
                             }
                             else
                             {
-                                dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], value);
+                                dgvrow.Cells[col].Value = string.Format("[{0}][{1}]{2}", row["referencetype"], row["cadrename"], value);
                             }
                         }
                     }
@@ -631,7 +631,7 @@ WHERE
 
                         if (!row.ReadOnly)
                         {
-                            string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
+                            string defaultValue = string.Format("[{0}][{1}]", row.Cells[3].Value, row.Cells[4].Value);
                             // 如果事由中有[幹部]將移到事由內容最前面
                             if (_index > -1)
                             {
@@ -651,7 +651,7 @@ WHERE
                     {
                         if (!row.ReadOnly)
                         {
-                            string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
+                            string defaultValue = string.Format("[{0}][{1}]", row.Cells[3].Value, row.Cells[4].Value);
 
                             row.Cells[col].Value = defaultValue + reason;
                         }
@@ -673,7 +673,7 @@ WHERE
                     string cadreType = "" + dataGridViewX1.Rows[e.RowIndex].Cells[3].Value;
                     string cadreName = "" + dataGridViewX1.Rows[e.RowIndex].Cells[4].Value;
                     string key = string.Format("{0}_{1}", cadreType, cadreName);
-                    string defaultValue = string.Format("({0})({1})", cadreType, cadreName);
+                    string defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
 
                     #region default value
                     //if (this._dicCadreNameObByKey.ContainsKey(key))
@@ -681,16 +681,16 @@ WHERE
                     //    ClassCadreNameObj obj = this._dicCadreNameObByKey[key];
                     //    if (obj.Reason.IndexOf("[幹部]") > -1)
                     //    {
-                    //        defaultValue = string.Format("[幹部]({0})({1})", cadreType, cadreName);
+                    //        defaultValue = string.Format("[幹部][{0}][{1}]", cadreType, cadreName);
                     //    }
                     //    else
                     //    {
-                    //        defaultValue = string.Format("({0})({1})", cadreType, cadreName);
+                    //        defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
                     //    }
                     //}
                     //else
                     //{
-                    //    defaultValue = string.Format("({0})({1})", cadreType, cadreName);
+                    //    defaultValue = string.Format("[{0}][{1}]", cadreType, cadreName);
                     //}
                     #endregion
 
