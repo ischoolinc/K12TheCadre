@@ -581,23 +581,26 @@ WHERE
         {
             if (this._initFinish)
             {
-                int col = 8;
-                KeyValuePair<string, string> kvp = (KeyValuePair<string, string>)this.cbxReason.SelectedItem;
-                foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
+                if (this.cbxReason.SelectedIndex > -1)
                 {
-                    if (!dgvrow.ReadOnly)
+                    int col = 8;
+                    KeyValuePair<string, string> kvp = (KeyValuePair<string, string>)this.cbxReason.SelectedItem;
+                    foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
                     {
-                        DataRow row = (DataRow)dgvrow.Tag;
-                        string value = kvp.Value;
-                        if (value.IndexOf("[幹部]") > -1)
+                        if (!dgvrow.ReadOnly)
                         {
-                            int index = value.IndexOf("[幹部]");
-                            string reason = value.Remove(value.IndexOf("[幹部]"), 4);
-                            dgvrow.Cells[col].Value = string.Format("[幹部]({0})({1}){2}", row["referencetype"], row["cadrename"], reason);
-                        }
-                        else
-                        {
-                            dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], value);
+                            DataRow row = (DataRow)dgvrow.Tag;
+                            string value = kvp.Value;
+                            if (value.IndexOf("[幹部]") > -1)
+                            {
+                                int index = value.IndexOf("[幹部]");
+                                string reason = value.Remove(value.IndexOf("[幹部]"), 4);
+                                dgvrow.Cells[col].Value = string.Format("[幹部]({0})({1}){2}", row["referencetype"], row["cadrename"], reason);
+                            }
+                            else
+                            {
+                                dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], value);
+                            }
                         }
                     }
                 }
@@ -609,13 +612,13 @@ WHERE
             if (this._initFinish)
             {
                 int col = 8;
-                string comText = this.cbxReason.Text.Trim();
-                int index = comText.IndexOf('-');
+                string reason = cbxReason.Text.Trim();
+                int index = cbxReason.Text.Trim().IndexOf('-');
 
                 if (index > -1)
                 {
                     string value = "";
-                    string code = comText.Remove(index);
+                    string code = reason.Remove(index);
                     
                     if (this._dicReasonByKey.ContainsKey(code))
                     {
@@ -624,21 +627,20 @@ WHERE
 
                     foreach (DataGridViewRow row in dataGridViewX1.Rows)
                     {
+                        int _index = value.IndexOf("[幹部]");
+
                         if (!row.ReadOnly)
                         {
-                            string reason = "" + row.Cells[col].Value;
-
                             string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
                             // 如果事由中有[幹部]將移到事由內容最前面
-                            int _index = value.IndexOf("[幹部]");
                             if (_index > -1)
                             {
-                                value = value.Remove(_index, 4);
-                                row.Cells[col].Value = string.Format("[幹部]{0}{1}", defaultValue, value);
+                                //value = value.Remove(_index, 4);
+                                row.Cells[col].Value = string.Format("[幹部]{0}{1}", defaultValue, value.Remove(_index, 4));
                             }
                             else
                             {
-                                row.Cells[col].Value = string.Format("[幹部]{0}{1}", defaultValue, value);
+                                row.Cells[col].Value = string.Format("{0}{1}", defaultValue, value);
                             }
                         }
                     }
@@ -651,7 +653,7 @@ WHERE
                         {
                             string defaultValue = string.Format("({0})({1})", row.Cells[3].Value, row.Cells[4].Value);
 
-                            row.Cells[col].Value = defaultValue + comText;
+                            row.Cells[col].Value = defaultValue + reason;
                         }
                     }
                 }
