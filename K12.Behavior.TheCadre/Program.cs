@@ -195,7 +195,6 @@ namespace K12.Behavior.TheCadre
             };
 
             #region 幹部批次修改
-            // 2018/04/13 羿均 優化項目
             FISCA.Features.Register(URL幹部批次修改, arg =>
             {
                 (new CadreEdit.CadreEditForm()).ShowDialog();

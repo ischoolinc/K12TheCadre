@@ -597,7 +597,7 @@ WHERE
                         }
                         else
                         {
-                            dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], kvp.Value);
+                            dgvrow.Cells[col].Value = string.Format("({0})({1}){2}", row["referencetype"], row["cadrename"], value);
                         }
                     }
                 }
@@ -714,8 +714,7 @@ WHERE
 
 3.白色資料行代表幹部紀錄尚未登錄敘獎並未受幹部名稱管理。
 
-4.事由欄位【幹部類別】【幹部名稱】為識別幹部紀錄與獎勵
-　紀錄關聯的條件。 ", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
+4.事由欄位(幹部類別)(幹部名稱)此預設值為識別幹部紀錄是否已經敘獎的判斷條件。 ", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void linkManageCadreName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

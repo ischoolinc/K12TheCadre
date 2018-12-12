@@ -20,61 +20,75 @@ namespace K12.Behavior.TheCadre.CadreEdit
 {
     public partial class CadreEditForm : BaseForm
     {
-        private Dictionary<string, string> classDic = new Dictionary<string, string>();
-
-        private string clientInfo = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml.Replace("'", "''");
-
-        private string actor = DSAServices.UserAccount.Replace("'", "''");
+        private Dictionary<string, string> _dicClassIDByName = new Dictionary<string, string>();
+        private List<string> listCadreRecordUID = new List<string>(); // 要刪除的幹部紀錄UID
+        private string _clientInfo = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml.Replace("'", "''");
+        private string _actor = DSAServices.UserAccount.Replace("'", "''");
+        private QueryHelper _qh = new QueryHelper();
+        private UpdateHelper _up = new UpdateHelper();
 
         public CadreEditForm()
         {
             InitializeComponent();
+        }
 
+        private void CadreEditForm_Load(object sender, EventArgs e)
+        {
             conditionCbx.SelectedIndex = 0;
 
-            // Init SchoolYearCbx、semesterCbx
-            int schoolYear = int.Parse("" + School.DefaultSchoolYear);
-            int semester = int.Parse("" + School.DefaultSemester);
-            schoolYearCbx.Items.Add(schoolYear + 1);
-            schoolYearCbx.Items.Add(schoolYear);
-            schoolYearCbx.Items.Add(schoolYear - 1);
-            schoolYearCbx.SelectedIndex = 1;
-
-            semesterCbx.Items.Add(1);
-            semesterCbx.Items.Add(2);
-            semesterCbx.SelectedIndex = semester - 1;
-
-            // Init ClassCbx
-            string sql2 = "SELECT * FROM class ORDER BY grade_year, display_order";
-            QueryHelper qh2 = new QueryHelper();
-            DataTable dt2 = qh2.Select(sql2);
-            foreach (DataRow row in dt2.Rows)
+            #region Init SchoolYearCbx、semesterCbx
             {
-                classCbx.Items.Add("" + row["class_name"]);
-                if (!classDic.ContainsKey("" + row["class_name"]))
+                int schoolYear = int.Parse("" + School.DefaultSchoolYear);
+                int semester = int.Parse("" + School.DefaultSemester);
+                schoolYearCbx.Items.Add(schoolYear + 1);
+                schoolYearCbx.Items.Add(schoolYear);
+                schoolYearCbx.Items.Add(schoolYear - 1);
+                schoolYearCbx.SelectedIndex = 1;
+
+                semesterCbx.Items.Add(1);
+                semesterCbx.Items.Add(2);
+                semesterCbx.SelectedIndex = semester - 1;
+            }
+            #endregion
+
+            #region Init ClassCbx
+            {
+                string sql = "SELECT * FROM class ORDER BY grade_year, display_order";
+                DataTable dt = this._qh.Select(sql);
+                foreach (DataRow row in dt.Rows)
                 {
-                    classDic.Add("" + row["class_name"], "" + row["id"]);
+                    classCbx.Items.Add("" + row["class_name"]);
+                    if (!_dicClassIDByName.ContainsKey("" + row["class_name"]))
+                    {
+                        _dicClassIDByName.Add("" + row["class_name"], "" + row["id"]);
+                    }
                 }
             }
-            // Init GradeYearCbx
-            string sql = "SELECT DISTINCT grade_year FROM class WHERE grade_year IS NOT NULL ORDER BY grade_year";
-            QueryHelper qh = new QueryHelper();
-            DataTable dt = qh.Select(sql);
-            foreach (DataRow row in dt.Rows)
-            {
-                gradeYearCbx.Items.Add("" + row[0]);
-            }
-            gradeYearCbx.SelectedIndex = 0;
+            #endregion
 
-            // Init CadreNameCbx
-            string sql3 = "SELECT DISTINCT cadreName FROM $behavior.thecadre";
-            QueryHelper qh3 = new QueryHelper();
-            DataTable dt3 = qh2.Select(sql3);
-            foreach (DataRow row in dt3.Rows)
+            #region Init GradeYearCbx
             {
-                cadreNameCbx.Items.Add("" + row[0]);
+                string sql = "SELECT DISTINCT grade_year FROM class WHERE grade_year IS NOT NULL ORDER BY grade_year";
+                DataTable dt = this._qh.Select(sql);
+                foreach (DataRow row in dt.Rows)
+                {
+                    gradeYearCbx.Items.Add("" + row[0]);
+                }
+                gradeYearCbx.SelectedIndex = 0;
             }
-            cadreNameCbx.SelectedIndex = 0;
+            #endregion
+
+            #region Init CadreNameCbx
+            {
+                string sql = "SELECT DISTINCT cadreName FROM $behavior.thecadre";
+                DataTable dt = this._qh.Select(sql);
+                foreach (DataRow row in dt.Rows)
+                {
+                    cadreNameCbx.Items.Add("" + row[0]);
+                }
+                cadreNameCbx.SelectedIndex = 0;
+            }
+            #endregion
         }
 
         private void conditionCbx_SelectedIndexChanged(object sender, EventArgs e)
@@ -133,92 +147,95 @@ namespace K12.Behavior.TheCadre.CadreEdit
 
         private void ReloadDataGridView()
         {
-            dataGridViewX1.Rows.Clear();
-            IDList.Clear();
-            #region 整理查詢條件
+            SuspendLayout();
+            {
+                dataGridViewX1.Rows.Clear();
+                listCadreRecordUID.Clear();
+                #region 整理查詢條件
 
-            string condition = conditionCbx.SelectedItem.ToString();
-            List<string> whereList = new List<string>();
+                string condition = conditionCbx.SelectedItem.ToString();
+                List<string> listWhere = new List<string>();
 
-            if (!allCkbx.Checked)
-            {
-                string schoolYear = schoolYearCbx.Text;
-                string semester = semesterCbx.Text;
-                whereList.Add("schoolyear = '" + schoolYear + "'");
-                whereList.Add("semester = '" + semester + "'");
-            }
-            if (condition == "班級")
-            {
-                if (classCbx.Text == "")
+                if (!allCkbx.Checked)
                 {
-                    MessageBox.Show("請選擇查詢班級!");
-                    return;
+                    string schoolYear = schoolYearCbx.Text;
+                    string semester = semesterCbx.Text;
+                    listWhere.Add("schoolyear = '" + schoolYear + "'");
+                    listWhere.Add("semester = '" + semester + "'");
                 }
-                string classID = classDic[classCbx.Text];
-                whereList.Add("class.id = " + classID);
-            }
-            if (condition == "年級")
-            {
-                string gradeYear = gradeYearCbx.Text;
-                whereList.Add("class.grade_year = " + gradeYear);
-            }
-            if (condition == "學號")
-            {
-                if (studentNumberTbx.Text == "")
+                if (condition == "班級")
                 {
-                    MessageBox.Show("請輸入查詢學生之學號!");
-                    return;
+                    if (classCbx.Text == "")
+                    {
+                        MessageBox.Show("請選擇查詢班級!");
+                        return;
+                    }
+                    string classID = _dicClassIDByName[classCbx.Text];
+                    listWhere.Add("class.id = " + classID);
                 }
-                string studentNumber = studentNumberTbx.Text;
-                whereList.Add("student.student_number = " + "'" + studentNumber + "'");
-            }
-            if (condition == "班級座號")
-            {
-                int i = 0;
-                if (!int.TryParse(seatNoTbx.Text,out i))
+                if (condition == "年級")
                 {
-                    MessageBox.Show("座號格式錯誤!");
-                    return;
+                    string gradeYear = gradeYearCbx.Text;
+                    listWhere.Add("class.grade_year = " + gradeYear);
                 }
-                if (classCbx.Text == "" || seatNoTbx.Text == "")
+                if (condition == "學號")
                 {
-                    MessageBox.Show("請輸入查詢學生之班級、座號!");
-                    return;
+                    if (studentNumberTbx.Text == "")
+                    {
+                        MessageBox.Show("請輸入查詢學生之學號!");
+                        return;
+                    }
+                    string studentNumber = studentNumberTbx.Text;
+                    listWhere.Add("student.student_number = " + "'" + studentNumber + "'");
                 }
-                string classID = classDic[classCbx.Text];
-                string seatNo = seatNoTbx.Text;
-                whereList.Add("class.id = " + classID);
-                whereList.Add("student.seat_no = " + seatNo);
-            }
-            if (condition == "幹部名稱")
-            {
-                string cadreName = cadreNameCbx.SelectedItem.ToString();
-                whereList.Add("cadrename = " + "'" + cadreName + "'");
-            }
-            string where = "";
-            if (whereList.Count > 0)
-            {
-                where = " AND ";
-            }
-            where += string.Join(" AND ", whereList);
+                if (condition == "班級座號")
+                {
+                    int i = 0;
+                    if (!int.TryParse(seatNoTbx.Text, out i))
+                    {
+                        MessageBox.Show("座號格式錯誤!");
+                        return;
+                    }
+                    if (classCbx.Text == "" || seatNoTbx.Text == "")
+                    {
+                        MessageBox.Show("請輸入查詢學生之班級、座號!");
+                        return;
+                    }
+                    string classID = _dicClassIDByName[classCbx.Text];
+                    string seatNo = seatNoTbx.Text;
+                    listWhere.Add("class.id = " + classID);
+                    listWhere.Add("student.seat_no = " + seatNo);
+                }
+                if (condition == "幹部名稱")
+                {
+                    string cadreName = cadreNameCbx.SelectedItem.ToString();
+                    listWhere.Add("cadrename = " + "'" + cadreName + "'");
+                }
+                string where = "";
+                if (listWhere.Count > 0)
+                {
+                    where = " AND ";
+                }
+                where += string.Join(" AND ", listWhere);
 
-            List<string> cardTypeList = new List<string>();
-            if (classCardCbx.Checked)
-            {
-                cardTypeList.Add("'班級幹部'");
-            }
-            if (clubCardCbx.Checked)
-            {
-                cardTypeList.Add("'社團幹部'");
-            }
-            if (schoolCardCbx.Checked)
-            {
-                cardTypeList.Add("'學校幹部'");
-            }
-            string cardType = string.Join(",", cardTypeList);
-            #endregion
+                List<string> cardTypeList = new List<string>();
+                if (classCardCbx.Checked)
+                {
+                    cardTypeList.Add("'班級幹部'");
+                }
+                if (clubCardCbx.Checked)
+                {
+                    cardTypeList.Add("'社團幹部'");
+                }
+                if (schoolCardCbx.Checked)
+                {
+                    cardTypeList.Add("'學校幹部'");
+                }
+                string cardType = string.Join(",", cardTypeList);
+                #endregion
 
-            string sql = string.Format(@"
+                #region SQL
+                string sql = string.Format(@"
                 SELECT
                     card.*
                     , class.class_name
@@ -235,28 +252,30 @@ namespace K12.Behavior.TheCadre.CadreEdit
                     card.referencetype IN ( {0} )
                     {1}
                 ", cardType, where);
+                #endregion
 
-            QueryHelper qh = new QueryHelper();
-            DataTable dt = qh.Select(sql);
+                DataTable dt = this._qh.Select(sql);
 
-            foreach (DataRow row in dt.Rows)
-            {
-                int index = 0;
-                DataGridViewRow datarow = new DataGridViewRow();
-                datarow.CreateCells(dataGridViewX1);
-                datarow.Tag = "" + row["uid"];
-                datarow.Cells[index++].Value = "" + row["class_name"];
-                datarow.Cells[index++].Value = "" + row["seat_no"];
-                datarow.Cells[index++].Value = "" + row["student_number"];
-                datarow.Cells[index++].Value = "" + row["name"];
-                datarow.Cells[index++].Value = "" + row["schoolyear"];
-                datarow.Cells[index++].Value = "" + row["semester"];
-                datarow.Cells[index++].Value = "" + row["referencetype"];
-                datarow.Cells[index++].Value = "" + row["cadrename"];
-                datarow.Cells[index++].Value = "" + row["text"];
+                foreach (DataRow row in dt.Rows)
+                {
+                    int index = 0;
+                    DataGridViewRow datarow = new DataGridViewRow();
+                    datarow.CreateCells(dataGridViewX1);
+                    datarow.Tag = "" + row["uid"]; // 幹部紀錄系統編號
+                    datarow.Cells[index++].Value = "" + row["class_name"];
+                    datarow.Cells[index++].Value = "" + row["seat_no"];
+                    datarow.Cells[index++].Value = "" + row["student_number"];
+                    datarow.Cells[index++].Value = "" + row["name"];
+                    datarow.Cells[index++].Value = "" + row["schoolyear"];
+                    datarow.Cells[index++].Value = "" + row["semester"];
+                    datarow.Cells[index++].Value = "" + row["referencetype"];
+                    datarow.Cells[index++].Value = "" + row["cadrename"];
+                    datarow.Cells[index++].Value = "" + row["text"];
 
-                dataGridViewX1.Rows.Add(datarow);
+                    dataGridViewX1.Rows.Add(datarow);
+                }
             }
+            ResumeLayout();
         }
 
         private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
@@ -359,18 +378,16 @@ namespace K12.Behavior.TheCadre.CadreEdit
             {
                 bgw.ReportProgress(10);
                 #region 刪除幹部紀錄
-                if (IDList.Count > 0)
+                if (listCadreRecordUID.Count > 0)
                 {
-                    DialogResult result = MessageBox.Show("儲存資料中有" + IDList.Count + "筆幹部紀錄將被刪除", "警告", MessageBoxButtons.YesNo);
+                    DialogResult result = MessageBox.Show("儲存資料中有" + listCadreRecordUID.Count + "筆幹部紀錄將被刪除", "警告", MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)
                     {
-                        UpdateHelper up2 = new UpdateHelper();
-                        string IDs = string.Join(",", IDList);
+                        string IDs = string.Join(",", listCadreRecordUID);
                         //string sql2 = string.Format(@"DELETE FROM $behavior.thecadre WHERE uid IN ( {0} )", IDs);
 
-                        #region LOG
-
-                        string sql4 = string.Format(@"
+                        #region SQL
+                        string sql = string.Format(@"
                             WITH data_row AS(
                                 SELECT
                                     student.name AS student_name
@@ -412,22 +429,19 @@ namespace K12.Behavior.TheCadre.CadreEdit
 		                        , '刪除幹部紀錄: 學生「'|| data_row.student_name || '」 學年度「' || data_row.schoolyear || '」 學期「' || data_row.semester || '」 幹部類別「' || data_row.referencetype || '」幹部名稱「' || data_row.cadrename || '」' AS description
                             FROM
                                 data_row
-                        ", IDs, actor, clientInfo, clientInfo);
-
-                        up2.Execute(sql4);
-
+                        ", IDs, _actor, _clientInfo, _clientInfo); 
                         #endregion
-
+                        this._up.Execute(sql);
                     }
                 }
                 bgw.ReportProgress(40);
                 #endregion
 
                 #region 更新幹部紀錄
-                List<string> dataList = new List<string>();
+                List<string> listDataRow = new List<string>();
                 foreach (DataGridViewRow row in dataGridViewX1.Rows)
                 {
-                    if (IDList.Contains("" + row.Tag))
+                    if (listCadreRecordUID.Contains("" + row.Tag))
                     {
                         continue;
                     }
@@ -448,16 +462,17 @@ namespace K12.Behavior.TheCadre.CadreEdit
                                 , {4}::TEXT AS text
                              ", id, schoolYear, semester, cadre_name, text);
 
-                        dataList.Add(data);
+                        listDataRow.Add(data);
                     }
                 }
 
                 bgw.ReportProgress(60);
 
-                if (dataList.Count > 0)
+                if (listDataRow.Count > 0)
                 {
-                    string dataRow = string.Join(" UNION ALL ", dataList);
-                    string updateSql = string.Format(@"
+                    string dataRow = string.Join(" UNION ALL ", listDataRow);
+                    #region SQL
+                    string sql = string.Format(@"
                         WITH data_row AS(
                             {0}
                         ) , update_data AS(
@@ -506,12 +521,10 @@ namespace K12.Behavior.TheCadre.CadreEdit
 			                    ON old_data.uid = data_row.id           
                             LEFT OUTER JOIN student
                                 ON student.id = old_data.studentid::BIGINT
-                ", dataRow, actor, clientInfo);
-
+                ", dataRow, _actor, _clientInfo); 
+                    #endregion
                     bgw.ReportProgress(80);
-
-                    UpdateHelper up = new UpdateHelper();
-                    up.Execute(updateSql);
+                    this._up.Execute(sql);
                 }
 
                 bgw.ReportProgress(100);
@@ -613,16 +626,14 @@ namespace K12.Behavior.TheCadre.CadreEdit
             }
         }
 
-        private List<string> IDList = new List<string>(); // 幹部紀錄UID
-
         private void deleteItem_Click(object sender, EventArgs e)
         {
             System.Drawing.Font f = dataGridViewX1.DefaultCellStyle.Font;
             foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
             {
-                if (!IDList.Contains("" + row.Tag))
+                if (!listCadreRecordUID.Contains("" + row.Tag))
                 {
-                    IDList.Add("" + row.Tag);
+                    listCadreRecordUID.Add("" + row.Tag);
                     row.DefaultCellStyle.Font = new System.Drawing.Font(f, FontStyle.Strikeout);
                     row.DefaultCellStyle.ForeColor = Color.Red;
                     row.HeaderCell.Value = "刪除";
@@ -649,12 +660,14 @@ namespace K12.Behavior.TheCadre.CadreEdit
             System.Drawing.Font f = dataGridViewX1.DefaultCellStyle.Font;
             foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
             {
-                int index = IDList.IndexOf("" + row.Tag);
-                IDList.RemoveAt(index);
-                row.DefaultCellStyle.Font = new System.Drawing.Font(f, FontStyle.Regular);
-                row.DefaultCellStyle.ForeColor = Color.Black;
-                row.HeaderCell.Value = "";
-
+                if (listCadreRecordUID.Contains("" + row.Tag))
+                {
+                    int index = listCadreRecordUID.IndexOf("" + row.Tag);
+                    listCadreRecordUID.RemoveAt(index);
+                    row.DefaultCellStyle.Font = new System.Drawing.Font(f, FontStyle.Regular);
+                    row.DefaultCellStyle.ForeColor = Color.Black;
+                    row.HeaderCell.Value = "";
+                }
             }
         }
 
@@ -678,7 +691,5 @@ namespace K12.Behavior.TheCadre.CadreEdit
             }
         }
         #endregion
-
-
     }
 }
