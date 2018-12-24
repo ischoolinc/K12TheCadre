@@ -24,6 +24,7 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
         private int _semester = int.Parse(School.DefaultSemester);
         private bool _initFinish = false;
         private string _classID;
+        private string _associationID; 
         private AccessHelper _access = new AccessHelper();
         private QueryHelper _qh = new QueryHelper();
         private UpdateHelper _up = new UpdateHelper();
@@ -41,14 +42,20 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
             this._schoolYear = schoolYear;
             this._semester = semester;
         }
-
-        public CadreMeritManage(int schoolYear, int semester, CadreType type, string classID)
+        public CadreMeritManage(int schoolYear, int semester, CadreType type, string targetID)
         {
             InitializeComponent();
             this._cadreType = type;
             this._schoolYear = schoolYear;
             this._semester = semester;
-            this._classID = classID;
+            if (type == CadreType.ClubCadre)
+            {
+                this._associationID = targetID;
+            }
+            if (type == CadreType.ClassCadre)
+            {
+                this._classID = targetID;
+            }
         }
 
         private void CadreMeritManage_Load(object sender, EventArgs e)
@@ -216,6 +223,10 @@ WHERE
             {
                 condition += string.Format("AND class.id = {0}", this._classID);
             }
+            if (!string.IsNullOrEmpty(this._associationID))
+            {
+                condition += string.Format("AND sc_attend.ref_course_id = '{0}'", this._associationID);
+            }
             string sql = string.Format(@"
 SELECT 
 	class.class_name
@@ -224,19 +235,14 @@ SELECT
 	, student.name
 	, cadre.referencetype
 	, cadre.cadrename
-	--, cadretype.merita
-	--, cadretype.meritb
-	--, cadretype.meritc
-	--, cadretype.reason
 FROM 
 	$behavior.thecadre  AS cadre
 	LEFT OUTER JOIN student
 		ON student.id = cadre.studentid::BIGINT
 	LEFT OUTER JOIN class
 		ON class.id = student.ref_class_id
-	LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
-		ON cadretype.nametype = cadre.referencetype
-			AND cadretype.cadrename = cadre.cadrename
+    LEFT OUTER JOIN sc_attend 
+        ON sc_attend.ref_student_id = student.id
 WHERE
     {0}
                 ", condition);
@@ -258,10 +264,6 @@ WHERE
                     dgvrow.Cells[index++].Value = "" + row["name"];
                     dgvrow.Cells[index++].Value = "" + row["referencetype"];
                     dgvrow.Cells[index++].Value = "" + row["cadrename"];
-                    //dgvrow.Cells[index++].Value = "" + row["merita"];
-                    //dgvrow.Cells[index++].Value = "" + row["meritb"];
-                    //dgvrow.Cells[index++].Value = "" + row["meritc"];
-                    //dgvrow.Cells[8].Value = "" + row["reason"];
                     dgvrow.Cells[8].Value = string.Format("[{0}][{1}]", row["referencetype"], row["cadrename"]);
 
                     dgvrow.Tag = row; // row

@@ -11,7 +11,6 @@ namespace K12.Behavior.TheCadre
         [MainMethod("K12.Behavior.TheCadre")]
         static public void Main()
         {
-
             ServerModule.AutoManaged("http://module.ischool.com.tw/module/138/Cadre_Behavior/udm.xml");
 
             //幹部資料項目
