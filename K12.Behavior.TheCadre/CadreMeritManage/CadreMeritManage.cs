@@ -227,6 +227,8 @@ WHERE
             {
                 condition += string.Format("AND sc_attend.ref_course_id = '{0}'", this._associationID);
             }
+
+
             string sql = "";
             switch (this._cadreType)
             {
@@ -245,9 +247,11 @@ FROM
 		ON student.id = cadre.studentid::BIGINT
 	LEFT OUTER JOIN class
 		ON class.id = student.ref_class_id
+    LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
+	   ON cadretype.cadrename = cadre.cadrename
 WHERE
     {0}
-                    ",condition);
+                    ", condition);
                     break;
                 case CadreType.ClubCadre:
                     sql = string.Format(@"
@@ -266,6 +270,8 @@ FROM
 		ON class.id = student.ref_class_id
     LEFT OUTER JOIN sc_attend 
         ON sc_attend.ref_student_id = student.id
+    LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
+	   ON cadretype.cadrename = cadre.cadrename
 WHERE
     {0}
                     ", condition);
@@ -286,11 +292,16 @@ FROM
 		ON student.id = cadre.studentid::BIGINT
 	LEFT OUTER JOIN class
 		ON class.id = student.ref_class_id
+    LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
+	    ON cadretype.cadrename = cadre.cadrename
 WHERE
     {0}
                     ", condition);
                     break;
             }
+
+            sql += "ORDER BY class.class_name ,cadretype.nametype ,cadretype.index ";
+
             #endregion
 
             DataTable dt = this._qh.Select(sql);
