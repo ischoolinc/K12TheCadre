@@ -13,6 +13,8 @@ using FISCA.DSAUtil;
 using Framework.Feature;
 using System.Xml;
 using FISCA.UDT;
+using FISCA.LogAgent;
+using K12.Behavior.TheCadre.DAO;
 
 namespace K12.Behavior.TheCadre.CadreMeritManage
 {
@@ -24,11 +26,12 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
         private int _semester = int.Parse(School.DefaultSemester);
         private bool _initFinish = false;
         private string _classID;
-        private string _associationID; 
+        private string _associationID;
         private AccessHelper _access = new AccessHelper();
         private QueryHelper _qh = new QueryHelper();
         private UpdateHelper _up = new UpdateHelper();
         private CadreType _cadreType;
+        private bool _insertSuccess = false;
 
         public CadreMeritManage()
         {
@@ -677,7 +680,7 @@ WHERE
                 {
                     string value = "";
                     string code = reason.Remove(index);
-                    
+
                     if (this._dicReasonByKey.ContainsKey(code))
                     {
                         value = this._dicReasonByKey[code];
@@ -800,6 +803,7 @@ WHERE
             string registerDate = DateTime.Now.ToString("yyyy/MM/dd"); // 獎勵登錄日期
             string merit_flag = "1";
             List<string> dataRow = new List<string>();
+            List<LogDao> logDaos = new List<LogDao>();
 
             #region 資料驗證
             foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
@@ -828,6 +832,10 @@ WHERE
                     if ((a + b + c) > 0)
                     {
                         string studentID = "" + ((DataRow)dgvrow.Tag)["id"];
+                        string classname = "" + dgvrow.Cells[0].Value;
+                        string seatNo = "" + dgvrow.Cells[1].Value;
+                        string studentame = "" + dgvrow.Cells[2].Value;
+                        string cadreName = "" + dgvrow.Cells[4].Value;
                         string reason = "" + dgvrow.Cells[8].Value;
                         string detail = string.Format("<Discipline><Merit A = \"{0}\" B = \"{1}\" C = \"{2}\"/></Discipline>", a, b, c);
 
@@ -844,6 +852,25 @@ SELECT
                     ", schoolYear, semester, occurDate, reason, detail, studentID, merit_flag, registerDate);
 
                         dataRow.Add(data);
+
+
+
+                        //log 用 
+                        LogDao logeDao = new LogDao();
+                        logeDao.SchoolYear = schoolYear;
+                        logeDao.Semester = semester;
+                        logeDao.ClassName = classname;
+                        logeDao.SeatNo = seatNo;
+                        logeDao.StudentName = studentame;
+                        logeDao.CadreName = cadreName;
+                        logeDao.A = a;
+                        logeDao.B = b;
+                        logeDao.C = c;
+
+                        logDaos.Add(logeDao);
+
+
+
                     }
                 }
             }
@@ -884,7 +911,60 @@ FROM
                 try
                 {
                     this._up.Execute(sql);
+                    _insertSuccess = true;
+                    //log
+                    if (_insertSuccess)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine("幹部敘獎作業");
+                        sb.AppendLine("日期「" + DateTime.Now.ToShortDateString() + "」");
+                        sb.AppendLine(schoolYear + "年度, 第" + semester + "學期");
+                        sb.AppendLine("共「" + dataRow.Count + "」名學生，");
+                        sb.AppendLine("詳細資料：");
+
+                     
+                        foreach (LogDao item in logDaos)
+                        {
+                            sb.Append("班級「" + item.ClassName + "」");
+                            sb.Append("座號「" + item.SeatNo + "」");
+                            sb.Append("學生「" + item.StudentName + "」,");
+                            sb.Append("因擔任「" + item.CadreName + "」");
+
+                            //大功
+                            if (item.A != 0)
+                            {
+                                sb.Append("大功「" + item.A + "」 ");
+                            }
+                            else
+                            {
+                                sb.Append("");
+                            }
+                            //小功
+
+                            if (item.B != 0)
+                            {
+                                sb.Append("小功「" + item.B + "」 ");
+                            }
+                            else
+                            {
+                                sb.Append("");
+                            }
+
+                            //嘉獎
+                            if (item.C != 0)
+                            {
+                                sb.AppendLine("嘉獎「" + item.C + "」 ");
+                            }
+                            else
+                            {
+                                sb.AppendLine("");
+                            }
+                        }
+
+                        ApplicationLog.Log("學務系統.懲戒資料", "幹部敘獎資料", sb.ToString());
+                    }
                     MessageBox.Show("獎勵登錄完成");
+
                     ReloadDataGridView();
                 }
                 catch (Exception ex)
@@ -897,6 +977,9 @@ FROM
             {
                 MsgBox.Show("沒有可登錄資料!");
             }
+
+
+
 
         }
 
