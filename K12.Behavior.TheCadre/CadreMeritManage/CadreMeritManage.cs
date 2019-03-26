@@ -14,7 +14,6 @@ using Framework.Feature;
 using System.Xml;
 using FISCA.UDT;
 using FISCA.LogAgent;
-using K12.Behavior.TheCadre.DAO;
 
 namespace K12.Behavior.TheCadre.CadreMeritManage
 {
@@ -31,7 +30,6 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
         private QueryHelper _qh = new QueryHelper();
         private UpdateHelper _up = new UpdateHelper();
         private CadreType _cadreType;
-        private bool _insertSuccess = false;
 
         public CadreMeritManage()
         {
@@ -252,8 +250,13 @@ FROM
 		ON class.id = student.ref_class_id
     LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
 	   ON cadretype.cadrename = cadre.cadrename
+        AND cadretype.nametype = cadre.referencetype
 WHERE
     {0}
+ORDER BY 
+    class.class_name 
+    ,cadretype.nametype 
+    ,cadretype.index
                     ", condition);
                     break;
                 case CadreType.ClubCadre:
@@ -275,8 +278,13 @@ FROM
         ON sc_attend.ref_student_id = student.id
     LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
 	   ON cadretype.cadrename = cadre.cadrename
+        AND cadretype.nametype = cadre.referencetype
 WHERE
     {0}
+ORDER BY 
+    class.class_name 
+    ,cadretype.nametype 
+    ,cadretype.index
                     ", condition);
                     break;
 
@@ -297,13 +305,16 @@ FROM
 		ON class.id = student.ref_class_id
     LEFT OUTER JOIN $behavior.thecadre.cadretype AS cadretype
 	    ON cadretype.cadrename = cadre.cadrename
+        AND cadretype.nametype = cadre.referencetype
 WHERE
     {0}
+ORDER BY 
+    class.class_name 
+    ,cadretype.nametype 
+    ,cadretype.index
                     ", condition);
                     break;
             }
-
-            sql += "ORDER BY class.class_name ,cadretype.nametype ,cadretype.index ";
 
             #endregion
 
@@ -803,7 +814,7 @@ WHERE
             string registerDate = DateTime.Now.ToString("yyyy/MM/dd"); // 獎勵登錄日期
             string merit_flag = "1";
             List<string> dataRow = new List<string>();
-            List<LogDao> logDaos = new List<LogDao>();
+            List<Log> listLog = new List<Log>();
 
             #region 資料驗證
             foreach (DataGridViewRow dgvrow in dataGridViewX1.Rows)
@@ -853,29 +864,23 @@ SELECT
 
                         dataRow.Add(data);
 
-
-
                         //log 用 
-                        LogDao logeDao = new LogDao();
-                        logeDao.SchoolYear = schoolYear;
-                        logeDao.Semester = semester;
-                        logeDao.ClassName = classname;
-                        logeDao.SeatNo = seatNo;
-                        logeDao.StudentName = studentame;
-                        logeDao.CadreName = cadreName;
-                        logeDao.A = a;
-                        logeDao.B = b;
-                        logeDao.C = c;
+                        Log logData = new Log();
+                        logData.SchoolYear = schoolYear;
+                        logData.Semester = semester;
+                        logData.ClassName = classname;
+                        logData.SeatNo = seatNo;
+                        logData.StudentName = studentame;
+                        logData.CadreName = cadreName;
+                        logData.A = a;
+                        logData.B = b;
+                        logData.C = c;
 
-                        logDaos.Add(logeDao);
-
-
-
+                        listLog.Add(logData);
                     }
                 }
             }
             #endregion
-
 
             if (dataRow.Count > 0)
             {
@@ -911,75 +916,72 @@ FROM
                 try
                 {
                     this._up.Execute(sql);
-                    _insertSuccess = true;
-                    //log
-                    if (_insertSuccess)
+
+                    #region Log
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("幹部敘獎作業");
+                    sb.AppendLine("日期「" + DateTime.Now.ToShortDateString() + "」");
+                    sb.AppendLine(schoolYear + "年度, 第" + semester + "學期");
+                    sb.AppendLine("共「" + dataRow.Count + "」名學生，");
+                    sb.AppendLine("詳細資料：");
+
+                    foreach (Log item in listLog)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        sb.AppendLine("幹部敘獎作業");
-                        sb.AppendLine("日期「" + DateTime.Now.ToShortDateString() + "」");
-                        sb.AppendLine(schoolYear + "年度, 第" + semester + "學期");
-                        sb.AppendLine("共「" + dataRow.Count + "」名學生，");
-                        sb.AppendLine("詳細資料：");
+                        sb.Append("班級「" + item.ClassName + "」");
+                        sb.Append("座號「" + item.SeatNo + "」");
+                        sb.Append("學生「" + item.StudentName + "」,");
+                        sb.Append("因擔任「" + item.CadreName + "」");
 
-                     
-                        foreach (LogDao item in logDaos)
+                        #region 大功
+                        if (item.A != 0)
                         {
-                            sb.Append("班級「" + item.ClassName + "」");
-                            sb.Append("座號「" + item.SeatNo + "」");
-                            sb.Append("學生「" + item.StudentName + "」,");
-                            sb.Append("因擔任「" + item.CadreName + "」");
-
-                            //大功
-                            if (item.A != 0)
-                            {
-                                sb.Append("大功「" + item.A + "」 ");
-                            }
-                            else
-                            {
-                                sb.Append("");
-                            }
-                            //小功
-
-                            if (item.B != 0)
-                            {
-                                sb.Append("小功「" + item.B + "」 ");
-                            }
-                            else
-                            {
-                                sb.Append("");
-                            }
-
-                            //嘉獎
-                            if (item.C != 0)
-                            {
-                                sb.AppendLine("嘉獎「" + item.C + "」 ");
-                            }
-                            else
-                            {
-                                sb.AppendLine("");
-                            }
+                            sb.Append("大功「" + item.A + "」 ");
                         }
+                        else
+                        {
+                            sb.Append("");
+                        }
+                        #endregion
 
-                        ApplicationLog.Log("學務系統.懲戒資料", "幹部敘獎資料", sb.ToString());
+                        #region 小功
+                        if (item.B != 0)
+                        {
+                            sb.Append("小功「" + item.B + "」 ");
+                        }
+                        else
+                        {
+                            sb.Append("");
+                        }
+                        #endregion
+
+                        #region 嘉獎
+                        if (item.C != 0)
+                        {
+                            sb.AppendLine("嘉獎「" + item.C + "」 ");
+                        }
+                        else
+                        {
+                            sb.AppendLine("");
+                        }
+                        #endregion
                     }
+
+                    ApplicationLog.Log("學務系統.懲戒資料", "幹部敘獎資料", sb.ToString());
+                    #endregion
+
                     MessageBox.Show("獎勵登錄完成");
 
                     ReloadDataGridView();
                 }
                 catch (Exception ex)
                 {
-                    MsgBox.Show(string.Format("獎勵登入失敗:{0}", ex.Message));
+                    MsgBox.Show(string.Format("獎勵登錄失敗:{0}", ex.Message));
                 }
-
             }
             else
             {
                 MsgBox.Show("沒有可登錄資料!");
             }
-
-
-
 
         }
 
@@ -987,5 +989,24 @@ FROM
         {
             this.Close();
         }
+    }
+
+    class Log
+    {
+        public string SchoolYear { get; set; }
+        public string Semester { get; set; }
+        public string OccurDate { get; set; }
+        public string Reason { get; set; }
+        public string Retail { get; set; }
+        public string StudentID { get; set; }
+        public string CadreName { get; set; }
+        public string ClassName { get; set; }
+        public string SeatNo { get; set; }
+        public string StudentName { get; set; }
+        public string Merit_flag { get; set; }
+        public string RegisterDate { get; set; }
+        public int A { get; set; }
+        public int B { get; set; }
+        public int C { get; set; }
     }
 }

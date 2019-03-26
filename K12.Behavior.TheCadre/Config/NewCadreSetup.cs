@@ -47,6 +47,11 @@ namespace K12.Behavior.TheCadre
         private Queue<string> timerList2 = new Queue<string>();
 
         private List<string> CadreTypeList = new List<string>();
+
+        /// <summary>
+        /// key: 幹部類型_幹部名稱
+        /// </summary>
+        private Dictionary<string, string> dicCadreNameByKey = new Dictionary<string, string>();
         
         /// <summary>
         /// 傳入幹部型態(班級幹部/學校幹部/社團幹部/空字串為所有類型)
@@ -66,8 +71,6 @@ namespace K12.Behavior.TheCadre
             CadreTypeList.Add("社團幹部");
             CadreTypeList.Add("學校幹部");
 
-            //timerString();
-
             K12.Data.Configuration.ConfigData DateConfig = K12.Data.School.Configuration["幹部模組_幹部名稱清單"];
             //DateConfig["幹部名稱_輸入敘獎資料"] = KeyInMerit.Checked.ToString();
             if (DateConfig["幹部名稱管理畫面_輸入敘獎資料"] != "")
@@ -85,6 +88,8 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void SetData()
         {
+            this.dicCadreNameByKey.Clear();
+
             //取得班級幹部類型
             DataListener.SuspendListen(); //終止變更判斷
             DataGridViewDataInChange = false;
@@ -98,6 +103,19 @@ namespace K12.Behavior.TheCadre
                 foreach (ClassCadreNameObj each in list)
                 {
                     DataGridViewRow row = new DataGridViewRow();
+
+                    #region 檢查「幹部類型」+「幹部名稱」是否重複
+                    {
+                        string type = each.NameType;
+                        string name = each.CadreName;
+
+                        if (CheckCadreNameIsRepeat(type,name))
+                        {
+                            row.ErrorText = "「幹部類型」+「幹部名稱」為唯一值不可重複!";
+                        }
+                    }
+                    #endregion
+                    
                     row.CreateCells(dataGridViewX1);
                     row.Cells[colCadreType.Index].Value = each.NameType;
                     row.Cells[colCadreIndex.Index].Value = each.Index.ToString();
@@ -174,7 +192,7 @@ namespace K12.Behavior.TheCadre
         /// <returns></returns>
         private bool CheckBox()
         {
-            bool DateError = false;
+            bool dataError = false;
             foreach (DataGridViewRow eachRow in dataGridViewX1.Rows)
             {
                 if (eachRow.IsNewRow)
@@ -183,51 +201,69 @@ namespace K12.Behavior.TheCadre
                 CheckCell(eachRow);
             }
 
+            this.dicCadreNameByKey.Clear();
             foreach (DataGridViewRow eachRow in dataGridViewX1.Rows)
             {
-                //如果是新行則離開
+                // 如果是新行則離開
                 if (eachRow.IsNewRow)
                     continue;
 
-                //Row - 是否有錯誤訊息
+                // Row - 是否有錯誤訊息
                 if (!string.IsNullOrEmpty(eachRow.ErrorText))
                 {
-                    DateError = true;
+                    dataError = true;
                 }
 
-                //所有的Cell是否有錯誤訊息
+                // 所有的Cell是否有錯誤訊息
                 foreach (DataGridViewCell eachCell in eachRow.Cells)
                 {
                     if (!string.IsNullOrEmpty(eachCell.ErrorText))
                     {
-                        DateError = true;
+                        dataError = true;
                     }
                 }
+
+                #region 檢查「幹部類型」+「幹部名稱」是否重複
+                {
+                    string type = "" + eachRow.Cells[colCadreType.Index].Value;
+                    string name = "" + eachRow.Cells[colCadreName.Index].Value;
+
+                    if (CheckCadreNameIsRepeat(type,name))
+                    {
+                        eachRow.ErrorText = "「幹部類型」+「幹部名稱」為唯一值不可重複!";
+                        dataError = true;
+                    }
+                    else
+                    {
+                        eachRow.ErrorText = null;
+                    }
+                }
+                #endregion
             }
-            return DateError;
+            return dataError;
         }
 
         private void CheckCell(DataGridViewRow eachRow)
         {
-            //幹部類型
+            //　幹部類型
             check.CheckCadreType(eachRow.Cells[colCadreType.Index], "錯誤:必須選擇幹部類型");
 
-            //排序
+            //　排序
             check.CheckCellIsInt(eachRow.Cells[colCadreIndex.Index], "錯誤:排序必須輸入數字");
-            //幹部名稱
+            //　幹部名稱
             check.CheckCellIsEmptyError(eachRow.Cells[colCadreName.Index], "錯誤:幹部名稱必須填入內容!!");
 
             check.CheckCellIsIntEmpty(eachRow.Cells[colNumber.Index], "錯誤:擔任人數內容非數字"); 
-            //內容不是空的才檢查
+            //　內容不是空的才檢查
             check.CheckCellIsIntEmpty(eachRow.Cells[colMeritA.Index], "錯誤:大功內容非數字"); //大功
             check.CheckCellIsIntEmpty(eachRow.Cells[colMeritB.Index], "錯誤:小功內容非數字"); //小功
             check.CheckCellIsIntEmpty(eachRow.Cells[colMeritC.Index], "錯誤:嘉獎內容非數字"); //嘉獎
 
             if (KeyInMerit.Checked)
             {
-                //大功+小功+嘉獎不可等於0
+                //　大功+小功+嘉獎不可等於0
                 check.CheckRowTotalEqualToZero(eachRow, colMeritA.Index, colMeritB.Index, colMeritC.Index, "大功+小功+嘉獎不可為0");
-                //事由必須輸入內容
+                //　事由必須輸入內容
                 check.CheckCellIsEmptyWarning(eachRow.Cells[colMeritReason.Index]);
             }
         }
@@ -311,9 +347,23 @@ namespace K12.Behavior.TheCadre
                     return;
                 }
 
+                // 驗證資料清空
+                this.dicCadreNameByKey.Clear();
+
                 for (int x = 1; x <= wb.Worksheets[0].Cells.MaxDataRow; x++) //每一Row
                 {
+                    #region 檢查「幹部類型」+「幹部名稱」是否重複
+                    {
+                        string type = "" + ws.Cells[x, headers["幹部類型"]].Value;
+                        string name = "" + ws.Cells[x, headers["幹部名稱"]].Value;
 
+                        if (CheckCadreNameIsRepeat(type, name))
+                        {
+                            Campus.Windows.MsgBox.Show("「幹部類型」+「幹部名稱」為唯一值不可重複!");
+                            return;
+                        }
+                    }
+                    #endregion
                     if (string.IsNullOrEmpty(ws.Cells[x, headers["幹部名稱"]].StringValue.Trim()))
                     {
                         continue;
@@ -386,9 +436,24 @@ namespace K12.Behavior.TheCadre
                     FISCA.Presentation.Controls.MsgBox.Show(builder.ToString());
                     return;
                 }
-
+                
+                // 驗證資料清空
+                this.dicCadreNameByKey.Clear();
                 for (int x = 1; x <= wb.Worksheets[0].Cells.MaxDataRow; x++) //每一Row
                 {
+                    #region 檢查「幹部類型」+「幹部名稱」是否重複
+                    {
+                        string type = "" + ws.Cells[x, headers["幹部類型"]].Value;
+                        string name = "" + ws.Cells[x, headers["幹部名稱"]].Value;
+
+                        if (CheckCadreNameIsRepeat(type, name))
+                        {
+                            Campus.Windows.MsgBox.Show("「幹部類型」+「幹部名稱」為唯一值不可重複!");
+                            return;
+                        }
+                    }
+                    #endregion
+
                     //幹部類型為空就跳過
                     if (string.IsNullOrEmpty(ws.Cells[x, headers["幹部名稱"]].StringValue.Trim()))
                     {
@@ -466,7 +531,7 @@ namespace K12.Behavior.TheCadre
         /// </summary>
         private void ChangeKeyInMerit()
         {
-            //當輸入敘獎資料
+            //　當輸入敘獎資料
             if (KeyInMerit.Checked)
             {
                 colMeritA.Visible = true;
@@ -474,18 +539,8 @@ namespace K12.Behavior.TheCadre
                 colMeritC.Visible = true;
                 colMeritReason.Visible = true;
             }
-            else //不進行敘獎
+            else //　不進行敘獎
             {
-                //foreach (DataGridViewRow row in dataGridViewX1.Rows)
-                //{
-                //    if (row.IsNewRow)
-                //        continue;
-
-                //    row.Cells[colMeritA.Index].Value = 0;
-                //    row.Cells[colMeritB.Index].Value = 0;
-                //    row.Cells[colMeritC.Index].Value = 0;
-                //    row.Cells[colMeritReason.Index].Value = "";
-                //}
                 colMeritA.Visible = false;
                 colMeritB.Visible = false;
                 colMeritC.Visible = false;
@@ -493,13 +548,13 @@ namespace K12.Behavior.TheCadre
             }
         }
 
-        //資料更新事件
+        //　資料更新事件
         void DataListener_StatusChanged(object sender, ChangeEventArgs e)
         {
             DataGridViewDataInChange = true;
         }
 
-        //當設定被勾選
+        //　當設定被勾選
         private void KeyInMerit_CheckedChanged(object sender, EventArgs e)
         {
             K12.Data.Configuration.ConfigData DateConfig = K12.Data.School.Configuration["幹部模組_幹部名稱清單"];
@@ -509,13 +564,13 @@ namespace K12.Behavior.TheCadre
             ChangeKeyInMerit();
         }
 
-        //檢查新增之Row是否未輸入資料
+        //　檢查新增之Row是否未輸入資料
         private void dataGridViewX1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
             CheckCell(dataGridViewX1.Rows[e.Row.Index - 1]);
         }
 
-        //DataGridView結束編輯
+        //　DataGridView結束編輯
         private void dataGridViewX1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             CheckCell(dataGridViewX1.CurrentRow);
@@ -523,7 +578,7 @@ namespace K12.Behavior.TheCadre
             string CurrentCellValue = "" + dataGridViewX1.CurrentCell.Value;
             if (e.ColumnIndex == 7)
             {
-                //事由替換
+                //　事由替換
                 if (CodeDic.ContainsKey(CurrentCellValue))
                 {
                     dataGridViewX1.CurrentCell.Value = CodeDic[CurrentCellValue];
@@ -531,7 +586,6 @@ namespace K12.Behavior.TheCadre
             }
         }
 
-        //離開
         private void btnExit_Click(object sender, EventArgs e)
         {
             if (DataGridViewDataInChange)
@@ -557,7 +611,27 @@ namespace K12.Behavior.TheCadre
 
 3.獎勵事由欄位可直接輸入獎勵事由代碼。
 
-4.排序是依幹部類型、排序數字進行排序。", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
+4.排序是依幹部類型、排序數字進行排序。
+
+5.「幹部類型」+「幹部名稱」是唯一值不可重複。", "說明", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// 檢查「幹部類型」+「幹部名稱」是否重複
+        /// </summary>
+        private bool CheckCadreNameIsRepeat(string type, string name)
+        {
+            string key = string.Format("{0}_{1}",type,name);
+
+            if (!this.dicCadreNameByKey.ContainsKey(key))
+            {
+                this.dicCadreNameByKey.Add(key,name);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

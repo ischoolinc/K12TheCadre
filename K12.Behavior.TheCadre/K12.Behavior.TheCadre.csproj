@@ -216,7 +216,6 @@
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </Compile>
     <Compile Include="ClassExtendControls\new\Controller.cs" />
-    <Compile Include="DAO\LogDao.cs" />
     <Compile Include="Report\School\SQLselect_School.cs" />
     <Compile Include="Report\School\SchoolLeadersSummaryTable.cs">
       <SubType>Form</SubType>
