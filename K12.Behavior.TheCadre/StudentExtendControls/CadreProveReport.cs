@@ -412,7 +412,7 @@ namespace K12.Behavior.TheCadre
             int schoolYear, semester;
             schoolYear = Convert.ToInt32(School.DefaultSchoolYear);
             semester = Convert.ToInt32(School.DefaultSemester);
-            string reportName = schoolYear + "學年度第" + semester + "學期學生幹部證明單";
+            string reportName = schoolYear + "學年度第" + semester + "學期幹部證明單";
             MemoryStream memoryStream = new MemoryStream();
             inResult.Save(memoryStream, SaveFormat.Docx);
             ePaperCloud ePaperCloud = new ePaperCloud();
