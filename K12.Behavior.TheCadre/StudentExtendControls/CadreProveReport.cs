@@ -15,6 +15,7 @@ using System.IO;
 using K12.Data;
 using Aspose.Words.Drawing;
 using System.Xml;
+using Campus.ePaperCloud;
 
 namespace K12.Behavior.TheCadre
 {
@@ -189,6 +190,9 @@ namespace K12.Behavior.TheCadre
                 #region MailMerge
                 List<string> name = new List<string>();
                 List<object> value = new List<object>();
+
+                name.Add("系統編號");
+                value.Add("系統編號{" + student.ID + "}");
 
                 name.Add("學校名稱");
                 value.Add(School.ChineseName);
@@ -405,30 +409,14 @@ namespace K12.Behavior.TheCadre
             Document inResult = (Document)e.Result;
             btnPrint.Enabled = true;
 
-            try
-            {
-                SaveFileDialog SaveFileDialog1 = new SaveFileDialog();
-
-                SaveFileDialog1.Filter = "Word (*.doc)|*.doc|所有檔案 (*.*)|*.*";
-                SaveFileDialog1.FileName = "學生幹部證明單";
-
-                if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    inResult.Save(SaveFileDialog1.FileName);
-                    Process.Start(SaveFileDialog1.FileName);
-                    MotherForm.SetStatusBarMessage("學生幹部證明單,列印完成!!");
-                }
-                else
-                {
-                    FISCA.Presentation.Controls.MsgBox.Show("檔案未儲存");
-                    return;
-                }
-            }
-            catch
-            {
-                FISCA.Presentation.Controls.MsgBox.Show("檔案儲存錯誤,請檢查檔案是否開啟中!!");
-                MotherForm.SetStatusBarMessage("檔案儲存錯誤,請檢查檔案是否開啟中!!");
-            }
+            int schoolYear, semester;
+            schoolYear = Convert.ToInt32(School.DefaultSchoolYear);
+            semester = Convert.ToInt32(School.DefaultSemester);
+            string reportName = schoolYear + "學年度第" + semester + "學期學生幹部證明單";
+            MemoryStream memoryStream = new MemoryStream();
+            inResult.Save(memoryStream, SaveFormat.Docx);
+            ePaperCloud ePaperCloud = new ePaperCloud();
+            ePaperCloud.upload_ePaper(schoolYear, semester, reportName, "", memoryStream, ePaperCloud.ViewerType.Student, ePaperCloud.FormatType.Docx);
         }
 
         private int SortUDT(SchoolObject x, SchoolObject y)
