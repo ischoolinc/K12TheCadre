@@ -414,7 +414,7 @@ namespace K12.Behavior.TheCadre
             semester = Convert.ToInt32(School.DefaultSemester);
             string reportName = schoolYear + "學年度第" + semester + "學期幹部證明單";
             MemoryStream memoryStream = new MemoryStream();
-            inResult.Save(memoryStream, SaveFormat.Docx);
+            inResult.Save(memoryStream, SaveFormat.Doc);
             ePaperCloud ePaperCloud = new ePaperCloud();
             ePaperCloud.upload_ePaper(schoolYear, semester, reportName, "", memoryStream, ePaperCloud.ViewerType.Student, ePaperCloud.FormatType.Docx);
         }
