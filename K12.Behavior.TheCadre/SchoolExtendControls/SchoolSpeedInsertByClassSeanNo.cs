@@ -34,6 +34,11 @@ namespace K12.Behavior.TheCadre
 
         private void CadreByStudentSean_Load(object sender, EventArgs e)
         {
+            //設定全型半型 
+            List<string> cols = new List<string>() { "座號"};
+            Campus.Windows.DataGridViewImeDecorator dec = new Campus.Windows.DataGridViewImeDecorator(this.dataGridViewX1, cols);
+
+
             BGW = new BackgroundWorker();
             BGW.DoWork += new DoWorkEventHandler(BGW_DoWork);
             BGW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BGW_RunWorkerCompleted);

@@ -61,6 +61,10 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
 
         private void CadreMeritManage_Load(object sender, EventArgs e)
         {
+            // 設定 全型半型
+            List<string> cols = new List<string>() { "大功", "小功", "嘉獎" ,"事由"};
+            Campus.Windows.DataGridViewImeDecorator dec = new Campus.Windows.DataGridViewImeDecorator(this.dataGridViewX1, cols);
+
             #region Init _dicCadreNameOb
             {
                 this.ReloadDicCadreNameOb();
