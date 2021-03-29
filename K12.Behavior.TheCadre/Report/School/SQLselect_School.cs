@@ -63,34 +63,36 @@ namespace K12.Behavior.TheCadre
                 }
             }
             #endregion
-
-            FISCA.Data.QueryHelper _queryHelper = new FISCA.Data.QueryHelper();
-            //篩選學生資料
-            StringBuilder sb1 = new StringBuilder();
-            //取得學生與班級Table
-            sb1.Append("select class.id as class_id,class.class_name,student.id as student_id,student.name,student.student_number,student.seat_no,class.display_order ");
-
-            //Join班級與學生
-            sb1.Append("from student left join class on student.ref_class_id=class.id ");
-
-            sb1.Append(string.Format("where student.id in('{0}') ", string.Join("','", list.ToArray())));
-
-            //排序(年級,班級順序,班級名稱,座號,姓名)排序
-            sb1.Append("order by class.grade_year,class.display_order,class.class_name,student.seat_no,student.name");
-
-            DataTable dt = _queryHelper.Select(sb1.ToString());
-            foreach (DataRow row in dt.Rows)
+            if (list.Count > 0)
             {
-                StudentCadre_School sc = new StudentCadre_School(row);
+                FISCA.Data.QueryHelper _queryHelper = new FISCA.Data.QueryHelper();
+                //篩選學生資料
+                StringBuilder sb1 = new StringBuilder();
+                //取得學生與班級Table
+                sb1.Append("select class.id as class_id,class.class_name,student.id as student_id,student.name,student.student_number,student.seat_no,class.display_order ");
 
-                if (!_StudentObjDic.ContainsKey(sc.Student_ID))
+                //Join班級與學生
+                sb1.Append("from student left join class on student.ref_class_id=class.id ");
+
+                sb1.Append(string.Format("where student.id in('{0}') ", string.Join("','", list.ToArray())));
+
+                //排序(年級,班級順序,班級名稱,座號,姓名)排序
+                sb1.Append("order by class.grade_year,class.display_order,class.class_name,student.seat_no,student.name");
+
+                DataTable dt = _queryHelper.Select(sb1.ToString());
+                foreach (DataRow row in dt.Rows)
                 {
-                    _StudentObjDic.Add(sc.Student_ID, sc);
-                }
-            }
+                    StudentCadre_School sc = new StudentCadre_School(row);
 
-            //排序
-            CadreList.Sort(SortCadre);
+                    if (!_StudentObjDic.ContainsKey(sc.Student_ID))
+                    {
+                        _StudentObjDic.Add(sc.Student_ID, sc);
+                    }
+                }
+
+                //排序
+                CadreList.Sort(SortCadre);
+            }
         }
 
         private int SortCadre(SchoolObject a1, SchoolObject b1)

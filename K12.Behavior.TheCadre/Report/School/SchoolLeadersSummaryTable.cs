@@ -91,17 +91,19 @@ namespace K12.Behavior.TheCadre
             Workbook template = new Workbook();
             template.Worksheets.Clear();
             //template.Open(new MemoryStream(Properties.Resources.學校幹部總表_範本), FileFormatType.Xlsx);
-            
-            template = new Workbook(new MemoryStream(Properties.Resources.學校幹部總表_範本), new LoadOptions());
+
+            template = new Workbook(new MemoryStream(Properties.Resources.學校幹部總表_範本), new LoadOptions(LoadFormat.Excel97To2003));
 
             Worksheet ptws = template.Worksheets[0];
             //建立Range
             Range ptHeader = ptws.Cells.CreateRange(0, 2, false);
             Range ptEachRow = ptws.Cells.CreateRange(2, 1, false);
 
+
             Workbook wb = new Workbook();
             wb.Copy(template);
             Worksheet ws = wb.Worksheets[0];
+            Style style = ws.Cells.GetCellStyle(2, 0);
 
             int studentCount = 0;
             int cutPageIndex = 49;
@@ -110,11 +112,10 @@ namespace K12.Behavior.TheCadre
             int cutStudentIndex = 0;
             //int count = 0;
 
-            ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
+            ws.Cells.CreateRange(studentCount, 2, true).Copy(ptHeader);
 
             string SchoolNameAndTitle = School.ChineseName + "　學校幹部總表";
             ws.Cells[studentCount, 0].PutValue(SchoolNameAndTitle); //學校名稱 與 報表名稱   
-            Range ClassHeader = ws.Cells.CreateRange(studentCount, 2, false);
             studentCount += 2;
             //把班級標頭拷貝下來
             foreach (SchoolObject cadre in sql.CadreList) //幹部名稱
@@ -126,7 +127,7 @@ namespace K12.Behavior.TheCadre
                     cutStudentIndex = 1;
                     //ws.HPageBreaks.Add(studentCount, 8);
                     ws.HorizontalPageBreaks.Add(studentCount, 8);
-                    ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
+                    ws.Cells.CreateRange(studentCount, 2, false).Copy(ptEachRow);
                     studentCount += 2;
                 }
 
@@ -144,14 +145,27 @@ namespace K12.Behavior.TheCadre
                 ws.Cells[studentCount, 6].PutValue(cadre.Semester); //學期
                 ws.Cells[studentCount, 7].PutValue(cadre.ReferenceType); //幹部類型
                 ws.Cells[studentCount, 8].PutValue(cadre.Text); //說明
+
+                ws.Cells[studentCount, 0].SetStyle(style);
+                ws.Cells[studentCount, 1].SetStyle(style);
+                ws.Cells[studentCount, 2].SetStyle(style);
+                ws.Cells[studentCount, 3].SetStyle(style);
+                ws.Cells[studentCount, 4].SetStyle(style);
+                ws.Cells[studentCount, 5].SetStyle(style);
+                ws.Cells[studentCount, 6].SetStyle(style);
+                ws.Cells[studentCount, 7].SetStyle(style);
+                ws.Cells[studentCount, 8].SetStyle(style);
+
                 //SetOutline++;
                 studentCount++;
-            }
 
+
+            }
+            
             string path = Path.Combine(Application.StartupPath, "Reports");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            path = Path.Combine(path, "學校幹部總表" + ".xlt");
+            path = Path.Combine(path, "學校幹部總表" + ".xlsx");
             e.Result = new object[] { "學校幹部總表", path, wb };
         }
 
@@ -186,7 +200,7 @@ namespace K12.Behavior.TheCadre
                 try
                 {
                     //wb.Save(path, FileFormatType.Excel2003);
-                    wb.Save(path,SaveFormat.Xlsx);
+                    wb.Save(path, SaveFormat.Xlsx);
                     FISCA.Presentation.MotherForm.SetStatusBarMessage(reportName + "產生完成");
                     System.Diagnostics.Process.Start(path);
                 }

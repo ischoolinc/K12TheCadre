@@ -155,7 +155,12 @@ namespace K12.Behavior.TheCadre
                                 _CadreRecord.SchoolYear = _DefSchoolYear.ToString(); //預設學年度
                                 _CadreRecord.Semester = _DefSemester.ToString(); //預設學期
                                 _CadreRecord.StudentID = s.StudedntID; //學生ID
-                                //_CadreRecord.Text = _Context._classRecord.Name; //學校幹部不輸入內容
+
+                                //原本 - 學校幹部不輸入內容
+                                //因采威 抓取資料是依據註解內的班級名稱
+                                //因此解除此限制
+                                //2021/3/26 - By Dylan
+                                _CadreRecord.Text = _student_class_name;
                             }
                         }
                     }
