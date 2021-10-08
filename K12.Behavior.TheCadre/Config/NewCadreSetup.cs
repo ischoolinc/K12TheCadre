@@ -61,6 +61,10 @@ namespace K12.Behavior.TheCadre
         {
             InitializeComponent();
 
+            List<int> cols = new List<int>() { 1, 3, 4, 5, 6 };
+            DataGridViewImeDecorator dec = new DataGridViewImeDecorator(this.dataGridViewX1, cols);
+
+
             DataListener = new ChangeListener();
             DataListener.Add(new DataGridViewSource(dataGridViewX1));
             DataListener.StatusChanged += new EventHandler<ChangeEventArgs>(DataListener_StatusChanged);
