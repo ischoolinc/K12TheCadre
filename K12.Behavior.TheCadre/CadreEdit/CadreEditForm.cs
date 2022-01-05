@@ -80,12 +80,18 @@ namespace K12.Behavior.TheCadre.CadreEdit
 
             #region Init CadreNameCbx
             {
-                string sql = "SELECT DISTINCT cadreName FROM $behavior.thecadre";
+                string sql = "SELECT DISTINCT cadrename FROM $behavior.thecadre.cadretype";
                 DataTable dt = this._qh.Select(sql);
                 foreach (DataRow row in dt.Rows)
                 {
                     cadreNameCbx.Items.Add("" + row[0]);
                 }
+                if (cadreNameCbx.Items.Count == 0)
+                {
+                    cadreNameCbx.Items.Add("尚未設定幹部");
+                    cadreNameCbx.Enabled = false;
+                }
+
                 cadreNameCbx.SelectedIndex = 0;
             }
             #endregion
@@ -429,7 +435,7 @@ namespace K12.Behavior.TheCadre.CadreEdit
 		                        , '刪除幹部紀錄: 學生「'|| data_row.student_name || '」 學年度「' || data_row.schoolyear || '」 學期「' || data_row.semester || '」 幹部類別「' || data_row.referencetype || '」幹部名稱「' || data_row.cadrename || '」' AS description
                             FROM
                                 data_row
-                        ", IDs, _actor, _clientInfo, _clientInfo); 
+                        ", IDs, _actor, _clientInfo, _clientInfo);
                         #endregion
                         this._up.Execute(sql);
                     }
@@ -521,7 +527,7 @@ namespace K12.Behavior.TheCadre.CadreEdit
 			                    ON old_data.uid = data_row.id           
                             LEFT OUTER JOIN student
                                 ON student.id = old_data.studentid::BIGINT
-                ", dataRow, _actor, _clientInfo); 
+                ", dataRow, _actor, _clientInfo);
                     #endregion
                     bgw.ReportProgress(80);
                     this._up.Execute(sql);
