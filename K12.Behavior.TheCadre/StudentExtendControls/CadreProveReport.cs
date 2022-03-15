@@ -16,6 +16,9 @@ using K12.Data;
 using Aspose.Words.Drawing;
 using System.Xml;
 using Campus.ePaperCloud;
+using Campus.Report2014;
+using Aspose.Words.Tables;
+using Aspose.Words.Reporting;
 
 namespace K12.Behavior.TheCadre
 {
@@ -42,7 +45,7 @@ namespace K12.Behavior.TheCadre
         //單頁範本
         private Document _template;
         //移動使用
-        private Run _run;
+        private static Run _run;
 
         //K12.Data.Configuration.ConfigData DateConfig;
 
@@ -67,17 +70,17 @@ namespace K12.Behavior.TheCadre
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             //取得設定檔
-            Campus.Report.ReportConfiguration ConfigurationInCadre = new Campus.Report.ReportConfiguration(CadreConfig);
+            ReportConfiguration ConfigurationInCadre = new ReportConfiguration(CadreConfig);
             //畫面內容(範本內容,預設樣式
-            Campus.Report.TemplateSettingForm TemplateForm;
+            TemplateSettingForm TemplateForm;
             if (ConfigurationInCadre.Template != null)
             {
-                TemplateForm = new Campus.Report.TemplateSettingForm(ConfigurationInCadre.Template, new Campus.Report.ReportTemplate(Properties.Resources.學生幹部證明單, Campus.Report.TemplateType.Word));
+                TemplateForm = new TemplateSettingForm(ConfigurationInCadre.Template, new ReportTemplate(Properties.Resources.學生幹部證明單, TemplateType.docx));
             }
             else
             {
-                ConfigurationInCadre.Template = new Campus.Report.ReportTemplate(Properties.Resources.學生幹部證明單, Campus.Report.TemplateType.Word);
-                TemplateForm = new Campus.Report.TemplateSettingForm(ConfigurationInCadre.Template, new Campus.Report.ReportTemplate(Properties.Resources.學生幹部證明單, Campus.Report.TemplateType.Word));
+                ConfigurationInCadre.Template = new ReportTemplate(Properties.Resources.學生幹部證明單, TemplateType.docx);
+                TemplateForm = new TemplateSettingForm(ConfigurationInCadre.Template, new ReportTemplate(Properties.Resources.學生幹部證明單, TemplateType.docx));
             }
 
             //預設名稱
@@ -144,12 +147,12 @@ namespace K12.Behavior.TheCadre
             _doc.Sections.Clear(); //清空此Document
 
             //取得設定檔
-            Campus.Report.ReportConfiguration ConfigurationInCadre = new Campus.Report.ReportConfiguration(CadreConfig);
+            ReportConfiguration ConfigurationInCadre = new ReportConfiguration(CadreConfig);
             if (ConfigurationInCadre.Template == null)
             {
                 //如果範本為空,則建立一個預設範本
-                Campus.Report.ReportConfiguration ConfigurationInCadre_1 = new Campus.Report.ReportConfiguration(CadreConfig);
-                ConfigurationInCadre_1.Template = new Campus.Report.ReportTemplate(Properties.Resources.學生幹部證明單, Campus.Report.TemplateType.Word);
+                ReportConfiguration ConfigurationInCadre_1 = new ReportConfiguration(CadreConfig);
+                ConfigurationInCadre_1.Template = new ReportTemplate(Properties.Resources.學生幹部證明單, TemplateType.docx);
                 //ConfigurationInCadre_1.Template = new Campus.Report.ReportTemplate(Properties.Resources.社團點名表_合併欄位總表, Campus.Report.TemplateType.Word);
                 _template = ConfigurationInCadre_1.Template.ToDocument();
             }
@@ -261,7 +264,7 @@ namespace K12.Behavior.TheCadre
                 //取得範本樣式
                 Document PageOne = (Document)_template.Clone(true);
 
-                PageOne.MailMerge.MergeField += new Aspose.Words.Reporting.MergeFieldEventHandler(MailMerge_MergeField);
+                PageOne.MailMerge.FieldMergingCallback = new InsertDocumentAtMailMergeHandler();
                 PageOne.MailMerge.Execute(name.ToArray(), value.ToArray());
                 #endregion
 
@@ -271,129 +274,136 @@ namespace K12.Behavior.TheCadre
 
             e.Result = _doc;
         }
-
-        void MailMerge_MergeField(object sender, Aspose.Words.Reporting.MergeFieldEventArgs e)
+        public class InsertDocumentAtMailMergeHandler : IFieldMergingCallback
         {
-            if (e.FieldName == "新生照片1" || e.FieldName == "新生照片2")
+            void IFieldMergingCallback.FieldMerging(FieldMergingArgs e)
             {
-                if (!string.IsNullOrEmpty(e.FieldValue.ToString()))
+                if (e.FieldName == "新生照片1" || e.FieldName == "新生照片2")
                 {
-                    byte[] photo = Convert.FromBase64String(e.FieldValue.ToString()); //e.FieldValue as byte[];
-
-                    if (photo != null && photo.Length > 0)
+                    if (!string.IsNullOrEmpty(e.FieldValue.ToString()))
                     {
-                        DocumentBuilder photoBuilder = new DocumentBuilder(e.Document);
-                        photoBuilder.MoveToField(e.Field, true);
-                        e.Field.Remove();
-                        //Paragraph paragraph = photoBuilder.InsertParagraph();// new Paragraph(e.Document);
-                        Shape photoShape = new Shape(e.Document, ShapeType.Image);
-                        photoShape.ImageData.SetImage(photo);
-                        photoShape.WrapType = WrapType.Inline;
-                        //Cell cell = photoBuilder.CurrentParagraph.ParentNode as Cell;
-                        //cell.CellFormat.LeftPadding = 0;
-                        //cell.CellFormat.RightPadding = 0;
-                        if (e.FieldName == "新生照片1")
+                        byte[] photo = Convert.FromBase64String(e.FieldValue.ToString()); //e.FieldValue as byte[];
+
+                        if (photo != null && photo.Length > 0)
                         {
-                            // 1吋
-                            photoShape.Width = ConvertUtil.MillimeterToPoint(25);
-                            photoShape.Height = ConvertUtil.MillimeterToPoint(35);
+                            DocumentBuilder photoBuilder = new DocumentBuilder(e.Document);
+                            photoBuilder.MoveToField(e.Field, true);
+                            e.Field.Remove();
+                            //Paragraph paragraph = photoBuilder.InsertParagraph();// new Paragraph(e.Document);
+                            Shape photoShape = new Shape(e.Document, ShapeType.Image);
+                            photoShape.ImageData.SetImage(photo);
+                            photoShape.WrapType = WrapType.Inline;
+                            //Cell cell = photoBuilder.CurrentParagraph.ParentNode as Cell;
+                            //cell.CellFormat.LeftPadding = 0;
+                            //cell.CellFormat.RightPadding = 0;
+                            if (e.FieldName == "新生照片1")
+                            {
+                                // 1吋
+                                photoShape.Width = ConvertUtil.MillimeterToPoint(25);
+                                photoShape.Height = ConvertUtil.MillimeterToPoint(35);
+                            }
+                            else
+                            {
+                                //2吋
+                                photoShape.Width = ConvertUtil.MillimeterToPoint(35);
+                                photoShape.Height = ConvertUtil.MillimeterToPoint(45);
+                            }
+                            //paragraph.AppendChild(photoShape);
+                            photoBuilder.InsertNode(photoShape);
                         }
-                        else
-                        {
-                            //2吋
-                            photoShape.Width = ConvertUtil.MillimeterToPoint(35);
-                            photoShape.Height = ConvertUtil.MillimeterToPoint(45);
-                        }
-                        //paragraph.AppendChild(photoShape);
-                        photoBuilder.InsertNode(photoShape);
                     }
                 }
-            }
-            else if (e.FieldName == "畢業照片1" || e.FieldName == "畢業照片2")
-            {
-                if (!string.IsNullOrEmpty(e.FieldValue.ToString()))
+                else if (e.FieldName == "畢業照片1" || e.FieldName == "畢業照片2")
                 {
-                    byte[] photo = Convert.FromBase64String(e.FieldValue.ToString()); //e.FieldValue as byte[];
-
-                    if (photo != null && photo.Length > 0)
+                    if (!string.IsNullOrEmpty(e.FieldValue.ToString()))
                     {
-                        DocumentBuilder photoBuilder = new DocumentBuilder(e.Document);
-                        photoBuilder.MoveToField(e.Field, true);
-                        e.Field.Remove();
-                        //Paragraph paragraph = photoBuilder.InsertParagraph();// new Paragraph(e.Document);
-                        Shape photoShape = new Shape(e.Document, ShapeType.Image);
-                        photoShape.ImageData.SetImage(photo);
-                        photoShape.WrapType = WrapType.Inline;
-                        //Cell cell = photoBuilder.CurrentParagraph.ParentNode as Cell;
-                        //cell.CellFormat.LeftPadding = 0;
-                        //cell.CellFormat.RightPadding = 0;
-                        if (e.FieldName == "畢業照片1")
+                        byte[] photo = Convert.FromBase64String(e.FieldValue.ToString()); //e.FieldValue as byte[];
+
+                        if (photo != null && photo.Length > 0)
                         {
-                            // 1吋
-                            photoShape.Width = ConvertUtil.MillimeterToPoint(25);
-                            photoShape.Height = ConvertUtil.MillimeterToPoint(35);
+                            DocumentBuilder photoBuilder = new DocumentBuilder(e.Document);
+                            photoBuilder.MoveToField(e.Field, true);
+                            e.Field.Remove();
+                            //Paragraph paragraph = photoBuilder.InsertParagraph();// new Paragraph(e.Document);
+                            Shape photoShape = new Shape(e.Document, ShapeType.Image);
+                            photoShape.ImageData.SetImage(photo);
+                            photoShape.WrapType = WrapType.Inline;
+                            //Cell cell = photoBuilder.CurrentParagraph.ParentNode as Cell;
+                            //cell.CellFormat.LeftPadding = 0;
+                            //cell.CellFormat.RightPadding = 0;
+                            if (e.FieldName == "畢業照片1")
+                            {
+                                // 1吋
+                                photoShape.Width = ConvertUtil.MillimeterToPoint(25);
+                                photoShape.Height = ConvertUtil.MillimeterToPoint(35);
+                            }
+                            else
+                            {
+                                //2吋
+                                photoShape.Width = ConvertUtil.MillimeterToPoint(35);
+                                photoShape.Height = ConvertUtil.MillimeterToPoint(45);
+                            }
+                            //paragraph.AppendChild(photoShape);
+                            photoBuilder.InsertNode(photoShape);
                         }
-                        else
-                        {
-                            //2吋
-                            photoShape.Width = ConvertUtil.MillimeterToPoint(35);
-                            photoShape.Height = ConvertUtil.MillimeterToPoint(45);
-                        }
-                        //paragraph.AppendChild(photoShape);
-                        photoBuilder.InsertNode(photoShape);
                     }
                 }
-            }
-            else if (e.FieldName == "資料")
-            {
-                List<SchoolObject> records = e.FieldValue as List<SchoolObject>;
-                records.Sort(SortSchoolObject);
-                Document PageOne = e.Document; // (Document)_template.Clone(true);
-                _run = new Run(PageOne);
-                DocumentBuilder builder = new DocumentBuilder(PageOne);
-                builder.MoveToMergeField("資料");
-                ////取得目前Cell
-                Cell cell = (Cell)builder.CurrentParagraph.ParentNode;
-                ////取得目前Row
-                Row row = (Row)builder.CurrentParagraph.ParentNode.ParentNode;
-
-                //建立新行
-                for (int x = 1; x < records.Count; x++)
+                else if (e.FieldName == "資料")
                 {
-                    (cell.ParentNode.ParentNode as Table).InsertAfter(row.Clone(true), cell.ParentNode);
-                }
+                    List<SchoolObject> records = e.FieldValue as List<SchoolObject>;
+                    records.Sort(SortSchoolObject);
+                    Document PageOne = e.Document; // (Document)_template.Clone(true);
+                    _run = new Run(PageOne);
+                    DocumentBuilder builder = new DocumentBuilder(PageOne);
+                    builder.MoveToMergeField("資料");
+                    ////取得目前Cell
+                    Cell cell = (Cell)builder.CurrentParagraph.ParentNode;
+                    ////取得目前Row
+                    Row row = (Row)builder.CurrentParagraph.ParentNode.ParentNode;
 
-                foreach (SchoolObject obj in records)
-                {
-
-                    List<string> list = new List<string>();
-                    list.Add(obj.SchoolYear);
-                    list.Add(obj.Semester);
-                    list.Add(obj.ReferenceType);
-                    list.Add(obj.CadreName);
-                    list.Add(obj.Text);
-
-                    foreach (string listEach in list)
+                    //建立新行
+                    for (int x = 1; x < records.Count; x++)
                     {
-                        Write(cell, listEach);
-
-                        if (cell.NextSibling != null) //是否最後一格
-                            cell = cell.NextSibling as Cell; //下一格
+                        (cell.ParentNode.ParentNode as Table).InsertAfter(row.Clone(true), cell.ParentNode);
                     }
 
-                    Row Nextrow = cell.ParentRow.NextSibling as Row; //取得下一個Row
-                    if (Nextrow == null)
-                        break;
-                    cell = Nextrow.FirstCell; //第一格Cell 
+                    foreach (SchoolObject obj in records)
+                    {
+
+                        List<string> list = new List<string>();
+                        list.Add(obj.SchoolYear);
+                        list.Add(obj.Semester);
+                        list.Add(obj.ReferenceType);
+                        list.Add(obj.CadreName);
+                        list.Add(obj.Text);
+
+                        foreach (string listEach in list)
+                        {
+                            Write(cell, listEach);
+
+                            if (cell.NextSibling != null) //是否最後一格
+                                cell = cell.NextSibling as Cell; //下一格
+                        }
+
+                        Row Nextrow = cell.ParentRow.NextSibling as Row; //取得下一個Row
+                        if (Nextrow == null)
+                            break;
+                        cell = Nextrow.FirstCell; //第一格Cell 
+                    }
+                }
+                else
+                {
+                    //...
                 }
             }
-            else
+
+            void IFieldMergingCallback.ImageFieldMerging(ImageFieldMergingArgs args)
             {
-                //...
+                // Do nothing.
             }
         }
 
-        private int SortSchoolObject(SchoolObject r1, SchoolObject r2)
+        private static int SortSchoolObject(SchoolObject r1, SchoolObject r2)
         {
             string school_1 = r1.SchoolYear.PadLeft(3, '0');
             school_1 += r1.Semester.PadLeft(1, '0');
@@ -465,7 +475,7 @@ namespace K12.Behavior.TheCadre
         /// <summary>
         /// 寫入資料
         /// </summary>
-        private void Write(Cell cell, string text)
+        private static void Write(Cell cell, string text)
         {
             if (cell.FirstParagraph == null)
                 cell.Paragraphs.Add(new Paragraph(cell.Document));

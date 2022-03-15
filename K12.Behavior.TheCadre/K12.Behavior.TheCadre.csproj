@@ -64,9 +64,8 @@
       <HintPath>Library\Aspose.Cells_201402.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Aspose.Words, Version=4.4.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\Aspose.Words.dll</HintPath>
+    <Reference Include="Aspose.Words_201402">
+      <HintPath>Library\Aspose.Words_201402.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Campus.ePaperCloud, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -74,9 +73,8 @@
       <HintPath>Library\Campus.ePaperCloud.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Campus.Report, Version=1.0.0.11, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Library\Campus.Report.dll</HintPath>
+    <Reference Include="Campus.Report2014">
+      <HintPath>Library\Campus.Report2014.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Campus.Windows, Version=1.0.4.3, Culture=neutral, processorArchitecture=MSIL">
@@ -417,11 +415,9 @@
     <Content Include="Library\Aspose.Cells.xml" />
     <Content Include="Library\Aspose.Cells_201402.dll" />
     <Content Include="Library\Aspose.Cells_201402.xml" />
-    <Content Include="Library\Aspose.Words.dll" />
-    <Content Include="Library\Aspose.Words.xml" />
+    <Content Include="Library\Aspose.Words_201402.dll" />
     <Content Include="Library\Campus.ePaperCloud.dll" />
-    <Content Include="Library\Campus.Report.dll" />
-    <Content Include="Library\Campus.Report.pdb" />
+    <Content Include="Library\Campus.Report2014.dll" />
     <Content Include="Library\Campus.Windows.dll" />
     <Content Include="Library\Campus.Windows.pdb" />
     <Content Include="Library\Campus.Windows.xml" />
