@@ -87,19 +87,17 @@ namespace K12.Behavior.TheCadre
             //取得範本
             Workbook template = new Workbook();
             template.Worksheets.Clear();
-            //template.Open(new MemoryStream(Properties.Resources.班級幹部總表_範本), FileFormatType.Xlsx);
-            template = new Workbook(new MemoryStream(Properties.Resources.班級幹部總表_範本), new LoadOptions());
+            template = new Workbook(new MemoryStream(Properties.Resources.班級幹部總表_範本), new LoadOptions(LoadFormat.Excel97To2003));
 
             Worksheet ptws = template.Worksheets[0];
             //建立Range
             Range ptHeader = ptws.Cells.CreateRange(0, 2, false);
             Range ptEachRow = ptws.Cells.CreateRange(2, 1, false);
-
+           
             Workbook wb = new Workbook();
-            
             wb.Copy(template);
             Worksheet ws = wb.Worksheets[0]; 
-            Style style = ws.Cells.GetCellStyle(2, 0); 
+            Style style = ws.Cells.GetCellStyle(2, 0);
 
             int studentCount = 0;
             int cutPageIndex = 49;
@@ -116,23 +114,20 @@ namespace K12.Behavior.TheCadre
                 
                 //int SetOutline = 1;
                 //複製 Header
-                //ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
-                //ws.Cells.sty
+                ws.Cells.CreateRange(studentCount, 2, false).Copy(ptHeader);
+                ws.Cells.CreateRange(studentCount, 2, false).CopyStyle(ptHeader);
+                ws.Cells.CreateRange(studentCount, 2, false).CopyData(ptHeader);
+
                 string SchoolNameAndTitle = "班級幹部總表";
                 ws.Cells[studentCount, 0].PutValue("班級：" + class_Name); //班級名稱
-                ws.Cells[studentCount, 0].SetStyle(style);
                 ws.Cells[studentCount, 2].PutValue(SchoolNameAndTitle); //學校名稱 與 報表名稱
-                ws.Cells[studentCount, 2].SetStyle(style);
 
                 if (sql._TeacherNameDic.ContainsKey(class_Name))
                     ws.Cells[studentCount, 7].PutValue("導師：" + sql._TeacherNameDic[class_Name]); //班導師
                 else
                     ws.Cells[studentCount, 7].PutValue("導師："); //班導師
-                ws.Cells[studentCount, 7].SetStyle(style);
-                //把班級標頭拷貝下來
-               // Range ClassHeader = ws.Cells.CreateRange(studentCount, 2, false);
-
                 studentCount += 2;
+
                 foreach (StudentCadre cadre in sql._StudentObjDic[class_Name]) //每一個學生幹部資料
                 {
                     foreach (SchoolObject obj in cadre.CadreList)
@@ -143,16 +138,21 @@ namespace K12.Behavior.TheCadre
                             cutStudentIndex = 1;
                             //ws.HPageBreaks.Add(studentCount, 7);
                             ws.HorizontalPageBreaks.Add(studentCount, 7);
-                            //ws.Cells.CreateRange(studentCount, 2, false).Copy(ClassHeader);
+                            ws.Cells.CreateRange(studentCount, 2, false).Copy(ptEachRow);
+                            ws.Cells.CreateRange(studentCount, 2, false).CopyStyle(ptEachRow);
+                            ws.Cells.CreateRange(studentCount, 2, false).CopyData(ptEachRow);
                             studentCount += 2;
                         }
 
 
-                        //ws.Cells.CreateRange(studentCount, 1, false).Copy(ptEachRow);
                         //if (SetOutline % 5 == 0 && SetOutline != 0)
                         //{
                         //    ws.Cells.CreateRange(studentCount, 0, 1, 8).SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Black);
                         //}
+
+                        ws.Cells.CreateRange(studentCount, 1, false).Copy(ptEachRow);
+                        ws.Cells.CreateRange(studentCount, 1, false).CopyStyle(ptEachRow);
+                        ws.Cells.CreateRange(studentCount, 1, false).CopyData(ptEachRow);
 
                         ws.Cells[studentCount, 0].PutValue(cadre.Student_SeatNo); //座號
                         ws.Cells[studentCount, 1].PutValue(cadre.Student_Name); //姓名
@@ -218,7 +218,6 @@ namespace K12.Behavior.TheCadre
 
                 try
                 {
-                    //wb.Save(path, FileFormatType.Excel2003);
                     wb.Save(path,SaveFormat.Xlsx);
                     FISCA.Presentation.MotherForm.SetStatusBarMessage(reportName + "產生完成");
                     System.Diagnostics.Process.Start(path);
@@ -233,7 +232,6 @@ namespace K12.Behavior.TheCadre
                     {
                         try
                         {
-                            //wb.Save(sd.FileName, FileFormatType.Excel2003);
                             wb.Save(sd.FileName,SaveFormat.Xlsx);
                         }
                         catch
