@@ -268,6 +268,10 @@ namespace K12.Behavior.TheCadre.CadreEdit
                     DataGridViewRow datarow = new DataGridViewRow();
                     datarow.CreateCells(dataGridViewX1);
                     datarow.Tag = "" + row["uid"]; // 幹部紀錄系統編號
+
+                    //2022/11/2 - 學生系統編號
+                    datarow.Cells[0].Tag = "" + row["studentid"];
+
                     datarow.Cells[index++].Value = "" + row["class_name"];
                     datarow.Cells[index++].Value = "" + row["seat_no"];
                     datarow.Cells[index++].Value = "" + row["student_number"];
@@ -302,11 +306,13 @@ namespace K12.Behavior.TheCadre.CadreEdit
             List<string> list = new List<string>();
             foreach (DataGridViewRow row in dataGridViewX1.SelectedRows)
             {
-                list.Add("" + row.Tag);
+                string Student_ID = "" + row.Cells[0].Tag;
+                if (!list.Contains(Student_ID))
+                    list.Add(Student_ID);
             }
             K12.Presentation.NLDPanels.Student.AddToTemp(list);
 
-            MessageBox.Show(string.Format("新增{0}名學生於待處理", dataGridViewX1.SelectedRows.Count));
+            MessageBox.Show(string.Format("新增{0}名學生於待處理", list.Count));
 
             if (K12.Presentation.NLDPanels.Student.TempSource.Count > 0)
             {
