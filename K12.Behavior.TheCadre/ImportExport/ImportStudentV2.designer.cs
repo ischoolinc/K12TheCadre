@@ -79,8 +79,12 @@
             // 
             // 
             this.wizard1.FooterStyle.BackColor = System.Drawing.Color.Transparent;
+            this.wizard1.FooterStyle.Class = "";
+            this.wizard1.FooterStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.wizard1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(57)))), ((int)(((byte)(129)))));
             this.wizard1.HeaderCaptionFont = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wizard1.HeaderDescriptionFont = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.wizard1.HeaderDescriptionIndent = 16;
             this.wizard1.HeaderImage = ((System.Drawing.Image)(resources.GetObject("wizard1.HeaderImage")));
             // 
             // 
@@ -95,6 +99,8 @@
             this.wizard1.HeaderStyle.BorderLeftWidth = 1;
             this.wizard1.HeaderStyle.BorderRightWidth = 1;
             this.wizard1.HeaderStyle.BorderTopWidth = 1;
+            this.wizard1.HeaderStyle.Class = "";
+            this.wizard1.HeaderStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.wizard1.HeaderStyle.TextAlignment = DevComponents.DotNetBar.eStyleTextAlignment.Center;
             this.wizard1.HeaderStyle.TextColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
             this.wizard1.HelpButtonVisible = false;
@@ -112,9 +118,9 @@
             // 
             // wizardPage1
             // 
-            this.wizardPage1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.wizardPage1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.wizardPage1.AntiAlias = false;
             this.wizardPage1.BackButtonVisible = DevComponents.DotNetBar.eWizardButtonState.False;
             this.wizardPage1.BackColor = System.Drawing.Color.Transparent;
@@ -129,11 +135,31 @@
             this.wizardPage1.NextButtonEnabled = DevComponents.DotNetBar.eWizardButtonState.False;
             this.wizardPage1.PageDescription = "選取匯入檔案";
             this.wizardPage1.Size = new System.Drawing.Size(450, 206);
+            // 
+            // 
+            // 
+            this.wizardPage1.Style.Class = "";
+            this.wizardPage1.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage1.StyleMouseDown.Class = "";
+            this.wizardPage1.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage1.StyleMouseOver.Class = "";
+            this.wizardPage1.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.wizardPage1.TabIndex = 7;
             // 
             // chkTrim
             // 
             this.chkTrim.AutoSize = true;
+            // 
+            // 
+            // 
+            this.chkTrim.BackgroundStyle.Class = "";
+            this.chkTrim.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.chkTrim.Checked = true;
             this.chkTrim.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkTrim.CheckValue = "Y";
@@ -158,9 +184,14 @@
             // 
             // lblReqFields
             // 
-            this.lblReqFields.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblReqFields.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.lblReqFields.BackgroundStyle.Class = "";
+            this.lblReqFields.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lblReqFields.Location = new System.Drawing.Point(105, 85);
             this.lblReqFields.Name = "lblReqFields";
             this.lblReqFields.Size = new System.Drawing.Size(312, 121);
@@ -171,6 +202,11 @@
             // labelX1
             // 
             this.labelX1.AutoSize = true;
+            // 
+            // 
+            // 
+            this.labelX1.BackgroundStyle.Class = "";
+            this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX1.Location = new System.Drawing.Point(35, 85);
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(74, 21);
@@ -191,12 +227,13 @@
             // 
             // txtFile
             // 
-            this.txtFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
             this.txtFile.Border.Class = "TextBoxBorder";
+            this.txtFile.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.txtFile.Location = new System.Drawing.Point(35, 36);
             this.txtFile.Name = "txtFile";
             this.txtFile.Size = new System.Drawing.Size(353, 25);
@@ -205,9 +242,9 @@
             // 
             // wizardPage2
             // 
-            this.wizardPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.wizardPage2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.wizardPage2.AntiAlias = false;
             this.wizardPage2.BackColor = System.Drawing.Color.Transparent;
             this.wizardPage2.Controls.Add(this.checkBox1);
@@ -216,6 +253,21 @@
             this.wizardPage2.Name = "wizardPage2";
             this.wizardPage2.PageDescription = "選取匯入欄位";
             this.wizardPage2.Size = new System.Drawing.Size(450, 206);
+            // 
+            // 
+            // 
+            this.wizardPage2.Style.Class = "";
+            this.wizardPage2.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage2.StyleMouseDown.Class = "";
+            this.wizardPage2.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage2.StyleMouseOver.Class = "";
+            this.wizardPage2.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.wizardPage2.TabIndex = 8;
             // 
             // checkBox1
@@ -231,11 +283,12 @@
             // 
             // listView1
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listView1.CheckBoxes = true;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 17);
             this.listView1.Name = "listView1";
             this.listView1.ShowGroups = false;
@@ -246,9 +299,9 @@
             // 
             // wizardPage3
             // 
-            this.wizardPage3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.wizardPage3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.wizardPage3.AntiAlias = false;
             this.wizardPage3.BackColor = System.Drawing.Color.Transparent;
             this.wizardPage3.Controls.Add(this.linkLabel3);
@@ -265,10 +318,25 @@
             this.wizardPage3.NextButtonVisible = DevComponents.DotNetBar.eWizardButtonState.False;
             this.wizardPage3.PageDescription = "驗證匯入資料";
             this.wizardPage3.Size = new System.Drawing.Size(450, 206);
+            // 
+            // 
+            // 
+            this.wizardPage3.Style.Class = "";
+            this.wizardPage3.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage3.StyleMouseDown.Class = "";
+            this.wizardPage3.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.wizardPage3.StyleMouseOver.Class = "";
+            this.wizardPage3.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.wizardPage3.TabIndex = 9;
+            this.wizardPage3.AfterPageDisplayed += new DevComponents.DotNetBar.WizardPageChangeEventHandler(this.wizardPage3_AfterPageDisplayed);
             this.wizardPage3.BackButtonClick += new System.ComponentModel.CancelEventHandler(this.wizardPage3_BackButtonClick);
             this.wizardPage3.FinishButtonClick += new System.ComponentModel.CancelEventHandler(this.wizardPage3_FinishButtonClick);
-            this.wizardPage3.AfterPageDisplayed += new DevComponents.DotNetBar.WizardPageChangeEventHandler(this.wizardPage3_AfterPageDisplayed);
             // 
             // linkLabel3
             // 
@@ -299,6 +367,11 @@
             // 
             this.lblErrCount.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblErrCount.AutoSize = true;
+            // 
+            // 
+            // 
+            this.lblErrCount.BackgroundStyle.Class = "";
+            this.lblErrCount.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lblErrCount.Location = new System.Drawing.Point(159, 139);
             this.lblErrCount.Name = "lblErrCount";
             this.lblErrCount.Size = new System.Drawing.Size(15, 21);
@@ -309,6 +382,11 @@
             // 
             this.labelX4.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelX4.AutoSize = true;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX4.Location = new System.Drawing.Point(58, 139);
             this.labelX4.Name = "labelX4";
             this.labelX4.Size = new System.Drawing.Size(101, 21);
@@ -319,6 +397,11 @@
             // 
             this.lblWarningCount.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWarningCount.AutoSize = true;
+            // 
+            // 
+            // 
+            this.lblWarningCount.BackgroundStyle.Class = "";
+            this.lblWarningCount.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lblWarningCount.Location = new System.Drawing.Point(159, 101);
             this.lblWarningCount.Name = "lblWarningCount";
             this.lblWarningCount.Size = new System.Drawing.Size(15, 21);
@@ -329,6 +412,11 @@
             // 
             this.labelX3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelX3.AutoSize = true;
+            // 
+            // 
+            // 
+            this.labelX3.BackgroundStyle.Class = "";
+            this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX3.Location = new System.Drawing.Point(58, 101);
             this.labelX3.Name = "labelX3";
             this.labelX3.Size = new System.Drawing.Size(101, 21);
@@ -337,8 +425,13 @@
             // 
             // progressBarX1
             // 
-            this.progressBarX1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBarX1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.progressBarX1.BackgroundStyle.Class = "";
+            this.progressBarX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.progressBarX1.Location = new System.Drawing.Point(118, 30);
             this.progressBarX1.Name = "progressBarX1";
             this.progressBarX1.Size = new System.Drawing.Size(295, 23);
@@ -348,6 +441,11 @@
             // labelX2
             // 
             this.labelX2.AutoSize = true;
+            // 
+            // 
+            // 
+            this.labelX2.BackgroundStyle.Class = "";
+            this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX2.Location = new System.Drawing.Point(37, 32);
             this.labelX2.Name = "labelX2";
             this.labelX2.Size = new System.Drawing.Size(74, 21);
@@ -356,7 +454,7 @@
             // 
             // SelectSourceFileDialog
             // 
-            this.SelectSourceFileDialog.Filter = "Excel 檔案 (*.xlsx)| *.xlsx";
+            this.SelectSourceFileDialog.Filter = "Excel 檔案 (*.xlsx,*.xls)|*.xlsx;*.xls";
             // 
             // errorFile
             // 
@@ -382,6 +480,11 @@
             // labelX5
             // 
             this.labelX5.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX5.BackgroundStyle.Class = "";
+            this.labelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX5.Location = new System.Drawing.Point(82, 295);
             this.labelX5.Name = "labelX5";
             this.labelX5.Size = new System.Drawing.Size(60, 23);
@@ -395,6 +498,7 @@
             this.Controls.Add(this.cboStudStatus);
             this.Controls.Add(this.labelX5);
             this.Controls.Add(this.wizard1);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ImportStudentV2";
