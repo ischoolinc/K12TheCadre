@@ -237,6 +237,15 @@ namespace K12.Behavior.TheCadre
                     value.Add("");
                 }
 
+
+                System.Globalization.TaiwanCalendar tc = new System.Globalization.TaiwanCalendar();
+                DateTime d = DateTime.Now;
+                string salesDate = String.Format("{0}年{1}月{2}日", tc.GetYear(d), tc.GetMonth(d), tc.GetDayOfMonth(d));
+
+                name.Add("日期");
+                value.Add(salesDate);
+                //value.Add(DateTime.Now.ToString("yyyy年mm月dd日"));
+
                 name.Add("資料");
                 if (StudentInfoList.ContainsKey(student.ID))
                     value.Add(StudentInfoList[student.ID]);
@@ -422,11 +431,13 @@ namespace K12.Behavior.TheCadre
             int schoolYear, semester;
             schoolYear = Convert.ToInt32(School.DefaultSchoolYear);
             semester = Convert.ToInt32(School.DefaultSemester);
-            string reportName = schoolYear + "學年度_第" + semester + "學期_幹部證明單";
+            string reportName = string.Format("幹部證明單({0}學年度 第{1}學期)", schoolYear, semester);
             MemoryStream memoryStream = new MemoryStream();
-            inResult.Save(memoryStream, SaveFormat.Doc);
+            inResult.Save(memoryStream, SaveFormat.Docx);
             ePaperCloud ePaperCloud = new ePaperCloud();
-            ePaperCloud.upload_ePaper(schoolYear, semester, reportName, "", memoryStream, ePaperCloud.ViewerType.Student, ePaperCloud.FormatType.Docx);
+            ePaperCloud.upload_ePaper(schoolYear, semester, reportName, "", memoryStream,
+                ePaperCloud.ViewerType.Student, ePaperCloud.FormatType.Docx,
+                "親愛的 同學 您好,學生幹部證明單已送達,請立即開啟電子報表檢視");
         }
 
         private int SortUDT(SchoolObject x, SchoolObject y)
@@ -490,8 +501,8 @@ namespace K12.Behavior.TheCadre
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Title = "另存新檔";
-            sfd.FileName = "學生幹部證明單_合併欄位總表.doc";
-            sfd.Filter = "Word檔案 (*.doc)|*.doc|所有檔案 (*.*)|*.*";
+            sfd.FileName = "學生幹部證明單_合併欄位總表.docx";
+            sfd.Filter = "Word檔案 (*.docx)|*.docx|所有檔案 (*.*)|*.*";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 try
