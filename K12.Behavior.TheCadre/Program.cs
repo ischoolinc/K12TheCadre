@@ -28,8 +28,10 @@ namespace K12.Behavior.TheCadre
             string URL匯入擔任幹部記錄 = "ischool/幹部系統/共用/學務/學生/匯入/擔任幹部紀錄";
             string URL幹部名稱管理 = "ischool/幹部系統/共用/學務/學務作業/幹部名稱管理";
             string URL學校幹部登錄 = "ischool/幹部系統/共用/學務/學務作業/學校幹部登錄";
+            string URL幹部登錄時間設定 = "ischool/幹部系統/共用/學務/學務作業/幹部登錄時間設定";
             string URL幹部批次修改 = "ischool/幹部系統/共用/學務/學務作業/幹部批次修改";
             string URL幹部敘獎作業 = "ischool/幹部系統/共用/學務/學務作業/幹部敘獎作業";
+
             //註冊功能
             #region URL班級幹部總表
             FISCA.Features.Register(URL班級幹部總表, arg =>
@@ -121,6 +123,35 @@ namespace K12.Behavior.TheCadre
             };
             #endregion
 
+            #region URL課程幹部登錄
+            //string URL課程幹部登錄 = "ischool/幹部系統/共用/學務/課程/課程幹部登錄";
+            //
+            //FISCA.Features.Register(URL課程幹部登錄, arg =>
+            //{
+            //    if (K12.Presentation.NLDPanels.Course.SelectedSource.Count == 1)
+            //    {
+            //        //ClassSpeedInsertBySeanNo CBC = new ClassSpeedInsertBySeanNo();
+            //        //CBC.ShowDialog();
+            //    }
+            //    else if (K12.Presentation.NLDPanels.Course.SelectedSource.Count > 1)
+            //    {
+            //        MsgBox.Show("本功能僅提供對單一課程進行幹部登錄作業!");
+            //    }
+            //    else
+            //    {
+            //        MsgBox.Show("請選擇一個課程!!");
+            //    }
+            //});
+            //RibbonBarItem rbItem4 = K12.Presentation.NLDPanels.Course.RibbonBarItems["學務"];
+            //rbItem4["課程幹部登錄"].Enable = false;
+            //rbItem4["課程幹部登錄"].Image = Properties.Resources.stamp_paper_fav_128;
+            //rbItem4["課程幹部登錄"].Size = RibbonBarButton.MenuButtonSize.Medium;
+            //rbItem4["課程幹部登錄"].Click += delegate
+            //{
+            //    Features.Invoke(URL課程幹部登錄);
+            //};
+            #endregion
+
             #region URL匯出擔任幹部記錄
             FISCA.Features.Register(URL匯出擔任幹部記錄, arg =>
             {
@@ -177,7 +208,7 @@ namespace K12.Behavior.TheCadre
                 cs1.ShowDialog();
             });
 
-            RibbonBarItem RibbonSpeedInsert = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "批次作業/查詢"];
+            RibbonBarItem RibbonSpeedInsert = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "幹部作業"];
             RibbonSpeedInsert["學校幹部登錄"].Image = Properties.Resources.stamp_paper_fav_128;
             RibbonSpeedInsert["學校幹部登錄"].Enable = Permissions.學校幹部登錄權限;
             RibbonSpeedInsert["學校幹部登錄"].Click += delegate
@@ -207,7 +238,7 @@ namespace K12.Behavior.TheCadre
             #endregion
 
             #region 幹部敘獎
-            FISCA.Features.Register(URL幹部敘獎作業 , arg  =>
+            FISCA.Features.Register(URL幹部敘獎作業, arg =>
             {
                 (new CadreMeritManage.CadreMeritManage()).ShowDialog();
             });
@@ -219,7 +250,24 @@ namespace K12.Behavior.TheCadre
             };
 
             #endregion
-           
+
+            //New
+
+            FISCA.Features.Register(URL幹部登錄時間設定, arg =>
+            {
+                CadreInputDateForm cdf = new CadreInputDateForm();
+                cdf.ShowDialog();
+
+            });
+
+            RibbonSpeedInsert = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "幹部作業"];
+            RibbonSpeedInsert["幹部登錄時間設定"].Image = Properties.Resources.chief_of_staff_clock_64;
+            RibbonSpeedInsert["幹部登錄時間設定"].Enable = Permissions.幹部登錄時間設定權限;
+            RibbonSpeedInsert["幹部登錄時間設定"].Click += delegate
+            {
+                Features.Invoke(URL幹部登錄時間設定);
+            };
+
             #region 權限控管
 
             Catalog detail2;
@@ -249,6 +297,7 @@ namespace K12.Behavior.TheCadre
             detail2.Add(new ReportFeature(Permissions.學校幹部總表, "學校幹部總表"));
             detail2.Add(new ReportFeature(Permissions.幹部批次修改, "幹部批次修改"));
             detail2.Add(new ReportFeature(Permissions.幹部敘獎作業, "幹部敘獎作業"));
+            detail2.Add(new ReportFeature(Permissions.幹部登錄時間設定, "幹部登錄時間設定"));
             #endregion
 
         }

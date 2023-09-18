@@ -625,6 +625,14 @@
             this.dateTimeInput1.MonthCalendar.CommandsBackgroundStyle.BorderTopWidth = 1;
             this.dateTimeInput1.MonthCalendar.CommandsBackgroundStyle.Class = "";
             this.dateTimeInput1.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.dateTimeInput1.MonthCalendar.DayNames = new string[] {
+        "日",
+        "一",
+        "二",
+        "三",
+        "四",
+        "五",
+        "六"};
             this.dateTimeInput1.MonthCalendar.DisplayMonth = new System.DateTime(2018, 4, 1, 0, 0, 0, 0);
             this.dateTimeInput1.MonthCalendar.MarkedDates = new System.DateTime[0];
             this.dateTimeInput1.MonthCalendar.MonthlyMarkedDates = new System.DateTime[0];

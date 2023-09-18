@@ -92,6 +92,7 @@ namespace K12.Behavior.TheCadre.CadreMeritManage
             {
                 cbxCadreType.Items.Add("--全部--");
                 cbxCadreType.Items.Add("班級幹部");
+                cbxCadreType.Items.Add("課程幹部");
                 cbxCadreType.Items.Add("社團幹部");
                 cbxCadreType.Items.Add("學校幹部");
 

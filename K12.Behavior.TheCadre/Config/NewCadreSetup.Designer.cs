@@ -300,7 +300,7 @@
             this.Controls.Add(this.dataGridViewX1);
             this.DoubleBuffered = true;
             this.Name = "NewCadreSetup";
-            this.Text = "幹部名稱管理(班級幹部 / 學校幹部 / 社團幹部)";
+            this.Text = "幹部名稱管理";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -83,6 +83,16 @@ namespace K12.Behavior.TheCadre.Properties {
         /// <summary>
         ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
         /// </summary>
+        internal static System.Drawing.Bitmap chief_of_staff_clock_64 {
+            get {
+                object obj = ResourceManager.GetObject("chief_of_staff_clock_64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
         internal static System.Drawing.Bitmap contract_fav_128 {
             get {
                 object obj = ResourceManager.GetObject("contract_fav_128", resourceCulture);

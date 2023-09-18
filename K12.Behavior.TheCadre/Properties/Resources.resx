@@ -124,6 +124,9 @@
   <data name="certificated_fav_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\certificated_fav_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="chief_of_staff_clock_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\chief_of_staff_clock_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="contract_fav_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\contract_fav_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

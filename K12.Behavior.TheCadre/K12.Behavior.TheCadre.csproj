@@ -219,14 +219,14 @@
       <DependentUpon>CadreMeritManage.cs</DependentUpon>
     </Compile>
     <Compile Include="CadreType.cs" />
-    <Compile Include="ClassExtendControls\new\CadreDataRow.cs" />
-    <Compile Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.cs">
+    <Compile Include="ClassExtendControls\CadreDataRow.cs" />
+    <Compile Include="ClassExtendControls\ClassSpeedInsertBySeanNo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.Designer.cs">
+    <Compile Include="ClassExtendControls\ClassSpeedInsertBySeanNo.Designer.cs">
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ClassExtendControls\new\Controller.cs" />
+    <Compile Include="ClassExtendControls\Controller.cs" />
     <Compile Include="Report\School\SQLselect_School.cs" />
     <Compile Include="Report\School\SchoolLeadersSummaryTable.cs">
       <SubType>Form</SubType>
@@ -244,6 +244,12 @@
     <Compile Include="Config\ConfigFormMethod.cs" />
     <Compile Include="Config\DataGridViewErrorCheck.cs" />
     <Compile Include="SchoolExtendControls\CadreDataRowSchool.cs" />
+    <Compile Include="SchoolExtendControls\CadreInputDateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SchoolExtendControls\CadreInputDateForm.Designer.cs">
+      <DependentUpon>CadreInputDateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SchoolExtendControls\GetAllStudent.cs" />
     <Compile Include="SchoolExtendControls\SchoolSpeedInsertByClassSeanNo.cs">
       <SubType>Form</SubType>
@@ -253,10 +259,10 @@
     </Compile>
     <Compile Include="SchoolExtendControls\SetDataGridViewRowState.cs" />
     <Compile Include="UDT\ClassCadreNameObj.cs" />
-    <Compile Include="ClassExtendControls\new\MutiMeritDemerit.cs">
+    <Compile Include="ClassExtendControls\MutiMeritDemerit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClassExtendControls\new\MutiMeritDemerit.designer.cs">
+    <Compile Include="ClassExtendControls\MutiMeritDemerit.designer.cs">
       <DependentUpon>MutiMeritDemerit.cs</DependentUpon>
     </Compile>
     <Compile Include="Config\NewCadreSetup.cs">
@@ -264,12 +270,6 @@
     </Compile>
     <Compile Include="Config\NewCadreSetup.Designer.cs">
       <DependentUpon>NewCadreSetup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ClassExtendControls\TheCadreByClassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ClassExtendControls\TheCadreByClassForm.designer.cs">
-      <DependentUpon>TheCadreByClassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CompleteForm.cs">
       <SubType>Form</SubType>
@@ -332,10 +332,10 @@
     <EmbeddedResource Include="CadreMeritManage\CadreMeritManage.resx">
       <DependentUpon>CadreMeritManage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClassExtendControls\new\ClassSpeedInsertBySeanNo.resx">
+    <EmbeddedResource Include="ClassExtendControls\ClassSpeedInsertBySeanNo.resx">
       <DependentUpon>ClassSpeedInsertBySeanNo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClassExtendControls\new\MutiMeritDemerit.resx">
+    <EmbeddedResource Include="ClassExtendControls\MutiMeritDemerit.resx">
       <DependentUpon>MutiMeritDemerit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Report\School\SchoolLeadersSummaryTable.resx">
@@ -346,10 +346,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Config\NewCadreSetup.resx">
       <DependentUpon>NewCadreSetup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ClassExtendControls\TheCadreByClassForm.resx">
-      <DependentUpon>TheCadreByClassForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CompleteForm.resx">
       <DependentUpon>CompleteForm.cs</DependentUpon>
@@ -366,6 +362,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SchoolExtendControls\CadreInputDateForm.resx">
+      <DependentUpon>CadreInputDateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SchoolExtendControls\SchoolSpeedInsertByClassSeanNo.resx">
       <DependentUpon>SchoolSpeedInsertByClassSeanNo.cs</DependentUpon>
@@ -456,9 +455,13 @@
     <Content Include="Library\SmartSchool.Customization.PlugIn.xml" />
     <Content Include="Library\SmartSchool.ErrorReporting.dll" />
     <Content Include="Library\SmartSchool.ErrorReporting.xml" />
+    <None Include="Resources\chief_of_staff_clock_64.png" />
     <None Include="Resources\diplom_fav_64.png" />
     <None Include="Resources\certificated_fav_64.png" />
     <None Include="Resources\contract_fav_128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CourseExtendControls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -69,9 +69,10 @@ namespace K12.Behavior.TheCadre
             DataListener.Add(new DataGridViewSource(dataGridViewX1));
             DataListener.StatusChanged += new EventHandler<ChangeEventArgs>(DataListener_StatusChanged);
 
-            this.Text = "幹部名稱管理(班級幹部 / 學校幹部 / 社團幹部)";
+            this.Text = "幹部名稱管理";
 
             CadreTypeList.Add("班級幹部");
+            CadreTypeList.Add("課程幹部");
             CadreTypeList.Add("社團幹部");
             CadreTypeList.Add("學校幹部");
 
