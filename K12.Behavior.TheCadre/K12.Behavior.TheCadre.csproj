@@ -460,9 +460,7 @@
     <None Include="Resources\certificated_fav_64.png" />
     <None Include="Resources\contract_fav_128.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CourseExtendControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
