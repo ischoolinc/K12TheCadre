@@ -28,7 +28,6 @@ namespace K12.Behavior.TheCadre
             string URL匯入擔任幹部記錄 = "ischool/幹部系統/共用/學務/學生/匯入/擔任幹部紀錄";
             string URL幹部名稱管理 = "ischool/幹部系統/共用/學務/學務作業/幹部名稱管理";
             string URL學校幹部登錄 = "ischool/幹部系統/共用/學務/學務作業/學校幹部登錄";
-            string URL幹部登錄時間設定 = "ischool/幹部系統/共用/學務/學務作業/幹部登錄時間設定";
             string URL幹部批次修改 = "ischool/幹部系統/共用/學務/學務作業/幹部批次修改";
             string URL幹部敘獎作業 = "ischool/幹部系統/共用/學務/學務作業/幹部敘獎作業";
 
@@ -62,7 +61,7 @@ namespace K12.Behavior.TheCadre
                 StudentRW.ShowDialog();
             });
 
-            RibbonBarItem rbItem8 = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "資料統計"];
+            RibbonBarItem rbItem8 = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "幹部作業"];
             rbItem8["報表"].Image = Properties.Resources.paste_64;
             rbItem8["報表"].Size = RibbonBarButton.MenuButtonSize.Large;
             rbItem8["報表"]["學校幹部總表"].Enable = Permissions.學校幹部總表權限;
@@ -193,7 +192,9 @@ namespace K12.Behavior.TheCadre
                  cs1.ShowDialog();
              });
 
-            RibbonBarItem RibbonItem = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "基本設定"];
+            RibbonBarItem RibbonItem = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "幹部作業"];
+            RibbonItem["管理"].Image = Properties.Resources.設定;
+            RibbonItem["管理"].Size = RibbonBarButton.MenuButtonSize.Large;
             RibbonItem["管理"]["幹部名稱管理"].Enable = Permissions.幹部名稱管理權限;
             RibbonItem["管理"]["幹部名稱管理"].Click += delegate
             {
@@ -250,23 +251,6 @@ namespace K12.Behavior.TheCadre
             };
 
             #endregion
-
-            //New
-
-            FISCA.Features.Register(URL幹部登錄時間設定, arg =>
-            {
-                CadreInputDateForm cdf = new CadreInputDateForm();
-                cdf.ShowDialog();
-
-            });
-
-            RibbonSpeedInsert = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "幹部作業"];
-            RibbonSpeedInsert["幹部登錄時間設定"].Image = Properties.Resources.chief_of_staff_clock_64;
-            RibbonSpeedInsert["幹部登錄時間設定"].Enable = Permissions.幹部登錄時間設定權限;
-            RibbonSpeedInsert["幹部登錄時間設定"].Click += delegate
-            {
-                Features.Invoke(URL幹部登錄時間設定);
-            };
 
             #region 權限控管
 

@@ -107,6 +107,11 @@
       <HintPath>Library\FISCA.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FISCA.DSAClient, Version=1.0.1.19, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\FISCA.DSAClient.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="FISCA.DSAUtil, Version=3.9.0.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\FISCA.DSAUtil.dll</HintPath>
@@ -244,12 +249,6 @@
     <Compile Include="Config\ConfigFormMethod.cs" />
     <Compile Include="Config\DataGridViewErrorCheck.cs" />
     <Compile Include="SchoolExtendControls\CadreDataRowSchool.cs" />
-    <Compile Include="SchoolExtendControls\CadreInputDateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SchoolExtendControls\CadreInputDateForm.Designer.cs">
-      <DependentUpon>CadreInputDateForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="SchoolExtendControls\GetAllStudent.cs" />
     <Compile Include="SchoolExtendControls\SchoolSpeedInsertByClassSeanNo.cs">
       <SubType>Form</SubType>
@@ -363,9 +362,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SchoolExtendControls\CadreInputDateForm.resx">
-      <DependentUpon>CadreInputDateForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SchoolExtendControls\SchoolSpeedInsertByClassSeanNo.resx">
       <DependentUpon>SchoolSpeedInsertByClassSeanNo.cs</DependentUpon>
     </EmbeddedResource>
@@ -431,6 +427,9 @@
     <Content Include="Library\FISCA.Data.dll" />
     <Content Include="Library\FISCA.Data.xml" />
     <Content Include="Library\FISCA.dll" />
+    <Content Include="Library\FISCA.DSAClient.dll" />
+    <Content Include="Library\FISCA.DSAClient.pdb" />
+    <Content Include="Library\FISCA.DSAClient.xml" />
     <Content Include="Library\FISCA.DSAUtil.dll" />
     <Content Include="Library\FISCA.DSAUtil.xml" />
     <Content Include="Library\FISCA.LogAgent.dll" />
@@ -455,6 +454,7 @@
     <Content Include="Library\SmartSchool.Customization.PlugIn.xml" />
     <Content Include="Library\SmartSchool.ErrorReporting.dll" />
     <Content Include="Library\SmartSchool.ErrorReporting.xml" />
+    <None Include="Resources\設定.png" />
     <None Include="Resources\chief_of_staff_clock_64.png" />
     <None Include="Resources\diplom_fav_64.png" />
     <None Include="Resources\certificated_fav_64.png" />

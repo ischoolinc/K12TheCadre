@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace K12.Behavior.TheCadre
+namespace K12.Behavior.TheCadre.Plus
 {
     public partial class CadreInputDateForm : BaseForm
     {
@@ -88,6 +88,16 @@ namespace K12.Behavior.TheCadre
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //針對 目前班級導師發送推播通知
+
+            ViewDetail vd = new ViewDetail();
+            vd.ShowDialog();
+
+
         }
     }
 }

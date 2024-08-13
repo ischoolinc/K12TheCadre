@@ -1,4 +1,4 @@
-﻿namespace K12.Behavior.TheCadre
+﻿namespace K12.Behavior.TheCadre.Plus
 {
     partial class CadreInputDateForm
     {
@@ -35,6 +35,7 @@
             this.lbHelp1 = new DevComponents.DotNetBar.LabelX();
             this.lbHelp2 = new DevComponents.DotNetBar.LabelX();
             this.lbHelp3 = new DevComponents.DotNetBar.LabelX();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dateTimeInput1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateTimeInput2)).BeginInit();
             this.SuspendLayout();
@@ -232,11 +233,24 @@
             this.lbHelp3.TabIndex = 11;
             this.lbHelp3.Text = "結束日期";
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabel1.Location = new System.Drawing.Point(16, 147);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(112, 17);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "推播通知班級導師";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // CadreInputDateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(363, 174);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.lbHelp3);
             this.Controls.Add(this.lbHelp2);
             this.Controls.Add(this.lbHelp1);
@@ -263,5 +277,6 @@
         private DevComponents.DotNetBar.LabelX lbHelp1;
         private DevComponents.DotNetBar.LabelX lbHelp2;
         private DevComponents.DotNetBar.LabelX lbHelp3;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

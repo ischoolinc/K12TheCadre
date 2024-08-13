@@ -189,5 +189,15 @@ namespace K12.Behavior.TheCadre.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 設定 {
+            get {
+                object obj = ResourceManager.GetObject("設定", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
