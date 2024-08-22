@@ -41,17 +41,6 @@ namespace K12.Behavior.TheCadre
 
         public static string 幹部敘獎作業 { get { return "BF048580-982C-41A6-8CD5-B79B5B78DC2D"; } }
 
-        public static string 幹部登錄時間設定 { get { return "K12.Behavior.TheCadre.CadreInputDateForm"; } }
-
-        public static bool 幹部登錄時間設定權限
-        {
-            get
-            {
-                bool check1 = FISCA.Permission.UserAcl.Current[幹部登錄時間設定].Executable;
-                return check1;
-            }
-        }
-
         public static bool 學校幹部總表權限
         {
             get

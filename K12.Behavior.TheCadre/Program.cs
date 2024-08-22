@@ -281,7 +281,6 @@ namespace K12.Behavior.TheCadre
             detail2.Add(new ReportFeature(Permissions.學校幹部總表, "學校幹部總表"));
             detail2.Add(new ReportFeature(Permissions.幹部批次修改, "幹部批次修改"));
             detail2.Add(new ReportFeature(Permissions.幹部敘獎作業, "幹部敘獎作業"));
-            detail2.Add(new ReportFeature(Permissions.幹部登錄時間設定, "幹部登錄時間設定"));
             #endregion
 
         }
