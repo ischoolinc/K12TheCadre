@@ -69,7 +69,9 @@ namespace K12.Behavior.TheCadre
             BGW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BGW_RunWorkerCompleted);
 
             //學年期
-            //lbSchoolYear.Text = "學年度「" + School.DefaultSchoolYear + "」學期「" + School.DefaultSemester + "」班級「" + _classRecord.Name + "」";
+            this.intSchoolYear.ValueChanged -= new System.EventHandler(this.intSchoolYear_ValueChanged);
+            this.intSemester.ValueChanged -= new System.EventHandler(this.intSemester_ValueChanged);
+
             intSchoolYear.Value = int.Parse(School.DefaultSchoolYear);
             intSemester.Value = int.Parse(School.DefaultSemester);
 
@@ -80,13 +82,14 @@ namespace K12.Behavior.TheCadre
 
         private void Reset()
         {
+
             if (!BGW.IsBusy)
             {
                 this.intSchoolYear.ValueChanged -= new System.EventHandler(this.intSchoolYear_ValueChanged);
                 this.intSemester.ValueChanged -= new System.EventHandler(this.intSemester_ValueChanged);
 
-                //DefSchoolYear = intSchoolYear.Value;
-                //DefSemester = intSemester.Value;
+                this.intSchoolYear.Enabled = false;
+                this.intSemester.Enabled = false;
 
                 BGW.RunWorkerAsync();
             }
@@ -107,8 +110,13 @@ namespace K12.Behavior.TheCadre
             //取得班級幹部設定,建置畫面
             ChangeForm();
 
+            SetDataGridViewFind();
+
             this.intSchoolYear.ValueChanged += new System.EventHandler(this.intSchoolYear_ValueChanged);
             this.intSemester.ValueChanged += new System.EventHandler(this.intSemester_ValueChanged);
+
+            this.intSchoolYear.Enabled = true;
+            this.intSemester.Enabled = true;
         }
 
         /// <summary>
@@ -209,12 +217,12 @@ namespace K12.Behavior.TheCadre
                         {
                             StudentRecord student = Student.SelectByID(obj.StudentID);
 
-                            CadreDataRow cdr = new CadreDataRow(student, obj, each.Index, this, intSchoolYear.Value, intSemester.Value);
+                            CadreDataRow cdr = new CadreDataRow(student, obj, each.Index, this, int.Parse("" + intSchoolYear.Value), int.Parse("" + intSemester.Value));
                             _RowList.Add(cdr);
                         }
                         else
                         {
-                            CadreDataRow cdr = new CadreDataRow(each.CadreName, each.Index, this, intSchoolYear.Value, intSemester.Value);
+                            CadreDataRow cdr = new CadreDataRow(each.CadreName, each.Index, this, int.Parse("" + intSchoolYear.Value), int.Parse("" + intSemester.Value));
                             _RowList.Add(cdr);
                         }
                     }
@@ -233,9 +241,6 @@ namespace K12.Behavior.TheCadre
                     CadreNameChange(); //開啟設定檔畫面
                 }
             }
-
-            this.intSchoolYear.ValueChanged += new System.EventHandler(this.intSchoolYear_ValueChanged);
-            this.intSemester.ValueChanged += new System.EventHandler(this.intSemester_ValueChanged);
         }
 
         private int SortRow(CadreDataRow a, CadreDataRow b)
@@ -313,7 +318,7 @@ namespace K12.Behavior.TheCadre
             foreach (CadreDataRow data in Def)
             {
                 listDef.Add(data._CadreRecord);
-            } 
+            }
             #endregion
 
             #region Log
@@ -377,7 +382,7 @@ namespace K12.Behavior.TheCadre
             else
             {
                 MsgBox.Show("未修改資料!!");
-            } 
+            }
             #endregion
 
             SetObjType = true;
@@ -387,7 +392,7 @@ namespace K12.Behavior.TheCadre
             {
                 #region 開啟「幹部敘獎作業」
 
-                (new CadreMeritManage.CadreMeritManage(intSchoolYear.Value,intSemester.Value, CadreType.ClassCadre, K12.Presentation.NLDPanels.Class.SelectedSource[0])).ShowDialog();
+                (new CadreMeritManage.CadreMeritManage(int.Parse("" + intSchoolYear.Value), int.Parse("" + intSemester.Value), CadreType.ClassCadre, K12.Presentation.NLDPanels.Class.SelectedSource[0])).ShowDialog();
 
                 // 舊-幹部敘獎作業
                 //List<SchoolObject> list = new List<SchoolObject>();
@@ -485,24 +490,38 @@ namespace K12.Behavior.TheCadre
 
         #endregion
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void tbSelect_TextChanged(object sender, EventArgs e)
         {
-            //btnReset.ForeColor = this.ControlText;
-            btnReset.ForeColor = Color.FromName("ControlText");
+            SetDataGridViewFind();
+        }
+
+        private void SetDataGridViewFind()
+        {
+            string KeyWord = tbSelect.Text;
+            dataGridViewX1.CurrentCell = null;
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                bool check = false;
+                string cardeName = "" + row.Cells[0].Value;
+                if (cardeName.Contains(KeyWord))
+                    check = true;
+
+                string studentName = "" + row.Cells[1].Value;
+                if (studentName.Contains(KeyWord))
+                    check = true;
+
+                row.Visible = check;
+            }
+        }
+
+        private void intSemester_ValueChanged(object sender, EventArgs e)
+        {
             Reset();
         }
 
         private void intSchoolYear_ValueChanged(object sender, EventArgs e)
         {
-            btnReset.ForeColor = Color.Red;
-            btnReset.Pulse(5);
+            Reset();
         }
-
-        private void intSemester_ValueChanged(object sender, EventArgs e)
-        {
-            btnReset.ForeColor = Color.Red;
-            btnReset.Pulse(5);
-        }
-
     }
 }
