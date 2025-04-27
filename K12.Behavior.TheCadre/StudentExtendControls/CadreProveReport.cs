@@ -365,6 +365,11 @@ namespace K12.Behavior.TheCadre
                     _run = new Run(PageOne);
                     DocumentBuilder builder = new DocumentBuilder(PageOne);
                     builder.MoveToMergeField("資料");
+                    //20250423 至涵 https://3.basecamp.com/4399967/buckets/20646185/todos/8571868797
+                    //改由抓 資料 功能變數的字型及大小
+                    _run.Font.Size = builder.Font.Size;
+                    _run.Font.Name = builder.Font.Name;
+
                     ////取得目前Cell
                     Cell cell = (Cell)builder.CurrentParagraph.ParentNode;
                     ////取得目前Row
@@ -492,8 +497,10 @@ namespace K12.Behavior.TheCadre
                 cell.Paragraphs.Add(new Paragraph(cell.Document));
             cell.FirstParagraph.Runs.Clear();
             _run.Text = text;
-            _run.Font.Size = 12;
-            _run.Font.Name = "標楷體";
+            //20250423 至涵 https://3.basecamp.com/4399967/buckets/20646185/todos/8571868797
+            //改由抓 資料 功能變數的字型及大小，此處註解掉避免覆蓋
+            //_run.Font.Size = 12;
+            //_run.Font.Name = "標楷體";
             cell.FirstParagraph.Runs.Add(_run.Clone(true));
         }
 
